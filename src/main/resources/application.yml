@@ -1,0 +1,16 @@
+---
+spring:
+profiles: default
+message: "Hello, from local!"
+
+#server:
+#  servlet:
+#    context-path: /api/
+---
+spring:
+profiles: dev
+message: "Hello, from dev!"
+---
+spring:
+profiles: production
+message: "Hello, from App Engine!"
