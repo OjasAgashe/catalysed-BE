@@ -1,0 +1,78 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+    <changeSet id="1" author="ojas.agashe@gmail.com">
+        <comment>User and Organization tables</comment>
+<!--        precondition-->
+        <createTable tableName="app_users">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="email" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="first_name" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="students">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" foreignKeyName="fk_student_app-user" references="app_users(id)" />
+            </column>
+            <column name="school" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="grade" type="varchar(50)"/>
+        </createTable>
+
+        <createTable tableName="mentors">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" foreignKeyName="fk_mentor_app-user" references="app_users(id)" />
+            </column>
+            <column name="gender" type="varchar(25)"/>
+            <column name="location" type="varchar(50)"/>
+        </createTable>
+    </changeSet>
+
+<!--    <createTable tableName="org_admins">-->
+<!--        <column name="id" type="BIGINT">-->
+<!--            <constraints nullable="false" primaryKey="true" foreignKeyName="fk_org-admin_user" references="app_users(id)" />-->
+<!--        </column>-->
+<!--        <column name="org_id" type="BIGINT">-->
+<!--            <constraints nullable="false" foreignKeyName="fk_org-admin_org" references="organizations(id)"/>-->
+<!--        </column>-->
+<!--        <column name="email" type="varchar(50)">-->
+<!--            <constraints nullable="false"/>-->
+<!--        </column>-->
+<!--        <column name="password" type="varchar(100)">-->
+<!--            <constraints nullable="false"/>-->
+<!--        </column>-->
+<!--        <column name="first_name" type="varchar(50)">-->
+<!--            <constraints nullable="false"/>-->
+<!--        </column>-->
+<!--        <column name="last_name" type="varchar(50)">-->
+<!--            <constraints nullable="false"/>-->
+<!--        </column>-->
+<!--        <column name="type" type="varchar(20)">-->
+<!--            <constraints nullable="false"/>-->
+<!--        </column>-->
+<!--    </createTable>-->
+
+
+
+
+
+
+
+</databaseChangeLog>
