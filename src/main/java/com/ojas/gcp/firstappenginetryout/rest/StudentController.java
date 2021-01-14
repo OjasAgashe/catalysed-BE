@@ -1,19 +1,24 @@
 package com.ojas.gcp.firstappenginetryout.rest;
 
 import com.ojas.gcp.firstappenginetryout.rest.dto.StudentDTO;
-import com.ojas.gcp.firstappenginetryout.service.StudentServiceImpl;
+import com.ojas.gcp.firstappenginetryout.service.StudentService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("students")
 public class StudentController {
-    private StudentServiceImpl studentService;
+    private StudentService studentService;
 
     @Autowired
-    public StudentController(StudentServiceImpl studentService) {
+    public StudentController(StudentService studentService) {
         this.studentService = studentService;
     }
 
@@ -23,10 +28,11 @@ public class StudentController {
         return ResponseEntity.ok(studentList);
     }
 
-    @GetMapping(value = "/{studentId}")
-    public ResponseEntity<Object> displayHelloMessage(@PathVariable Long studentId) {
-        StudentDTO student = studentService.getStudent(studentId);
-        return ResponseEntity.ok(student);
+
+    @PutMapping(value = "/{studentId}")
+    public ResponseEntity<Object> updateStudent(@RequestBody StudentDTO studentDTO) {
+        StudentDTO updatedStudent = studentService.updateStudent(studentDTO);
+        return ResponseEntity.ok(updatedStudent);
     }
 
     @PostMapping

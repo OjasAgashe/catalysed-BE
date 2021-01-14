@@ -1,16 +1,50 @@
 package com.ojas.gcp.firstappenginetryout.entity;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
-public class Student extends Person{
+@Entity
+@Table(name = "students")
+public class Student extends AppUser{
+
+    @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    private Long id;
+    @Column(name = "school")
     private String school;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "grade")
     private Grade grade;
-    private String memberType;
-    private List<String> mentors;
-    public Student(String firstName, String lastName, Grade grade, String school) {
-        super(firstName, lastName);
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    @JsonBackReference
+    private User user;
+
+    public Student(Long Id, Grade grade, String school) {
+        this.id = id;
         this.grade = grade;
         this.school = school;
+    }
+
+    public Student() {
+
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getSchool() {
@@ -29,19 +63,11 @@ public class Student extends Person{
         this.grade = grade;
     }
 
-    public String getMemberType() {
-        return memberType;
+    public User getUser() {
+        return user;
     }
 
-    public void setMemberType(String memberType) {
-        this.memberType = memberType;
-    }
-
-    public List<String> getMentors() {
-        return mentors;
-    }
-
-    public void setMentors(List<String> mentors) {
-        this.mentors = mentors;
+    public void setUser(User user) {
+        this.user = user;
     }
 }

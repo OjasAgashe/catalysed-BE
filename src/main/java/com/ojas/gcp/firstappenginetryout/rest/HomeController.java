@@ -13,5 +13,20 @@ public class HomeController {
     public ResponseEntity<String> displayHelloMessage() {
         return ResponseEntity.ok(message);
     }
+
+    @GetMapping("/")
+    public String helloAll() {
+        return ("<h1>Welcome All</h1>");
+    }
+
+    @GetMapping("/user")
+    public String helloUser() {
+        return ("<h1>Welcome User</h1>");
+    }
+
+    @GetMapping("/admin")
+    public String helloAdmin() {
+        return ("<h1>Welcome Admin</h1>");
+    }
 }
 
