@@ -29,18 +29,22 @@ public abstract class AppUser {
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
     private UserType type;
+    @Column(name = "account_activated")
+    private boolean accountActivated;
 
 
     protected AppUser() {
 
     }
 
-    public AppUser(String email, String password, String firstName, String lastName, UserType type) {
+    public AppUser(String email, String password, String firstName, String lastName, UserType type,
+                   boolean accountActivated) {
         this.email = email;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.type = type;
+        this.accountActivated = accountActivated;
     }
 
     public Long getId() {
@@ -89,5 +93,13 @@ public abstract class AppUser {
 
     public void setType(UserType type) {
         this.type = type;
+    }
+
+    public boolean getAccountActivated() {
+        return accountActivated;
+    }
+
+    public void setAccountActivated(boolean accountActivated) {
+        this.accountActivated = accountActivated;
     }
 }

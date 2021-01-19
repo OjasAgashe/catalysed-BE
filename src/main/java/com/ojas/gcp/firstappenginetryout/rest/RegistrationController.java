@@ -7,8 +7,11 @@ import com.ojas.gcp.firstappenginetryout.service.MentorService;
 import com.ojas.gcp.firstappenginetryout.service.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import javax.mail.MessagingException;
 import java.util.List;
 
@@ -23,6 +26,11 @@ public class RegistrationController {
         this.registrationService = registrationService;
         this.emailService = emailService;
         this.mentorService = mentorService;
+    }
+
+    @GetMapping(value = "register")
+    public String getRegistrationPage() throws Exception {
+        return ("<h1>Welcome to registration</h1>");
     }
 
     @PostMapping(value = "register")

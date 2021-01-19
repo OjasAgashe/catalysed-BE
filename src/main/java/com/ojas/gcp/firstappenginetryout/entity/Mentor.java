@@ -19,7 +19,7 @@ public class Mentor extends AppUser{
     @Column(name = "gender")
     private String gender;
 
-    public Mentor(Long Id, String location, String gender) {
+    public Mentor(Long id, String location, String gender) {
         this.id = id;
         this.location = location;
         this.gender = gender;

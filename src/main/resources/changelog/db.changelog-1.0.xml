@@ -3,7 +3,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
     <changeSet id="1" author="ojas.agashe@gmail.com">
-        <comment>User and Organization tables</comment>
+        <comment>User tables</comment>
 <!--        precondition-->
         <createTable tableName="app_users">
             <column name="id" type="BIGINT" autoIncrement="true">
@@ -18,10 +18,11 @@
             <column name="first_name" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
-            <column name="last_name" type="varchar(50)">
+            <column name="last_name" type="varchar(50)"/>
+            <column name="type" type="varchar(20)">
                 <constraints nullable="false"/>
             </column>
-            <column name="type" type="varchar(20)">
+            <column name="account_activated" type="BOOLEAN" defaultValueBoolean="false">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -45,34 +46,26 @@
         </createTable>
     </changeSet>
 
-<!--    <createTable tableName="org_admins">-->
-<!--        <column name="id" type="BIGINT">-->
-<!--            <constraints nullable="false" primaryKey="true" foreignKeyName="fk_org-admin_user" references="app_users(id)" />-->
-<!--        </column>-->
-<!--        <column name="org_id" type="BIGINT">-->
-<!--            <constraints nullable="false" foreignKeyName="fk_org-admin_org" references="organizations(id)"/>-->
-<!--        </column>-->
-<!--        <column name="email" type="varchar(50)">-->
-<!--            <constraints nullable="false"/>-->
-<!--        </column>-->
-<!--        <column name="password" type="varchar(100)">-->
-<!--            <constraints nullable="false"/>-->
-<!--        </column>-->
-<!--        <column name="first_name" type="varchar(50)">-->
-<!--            <constraints nullable="false"/>-->
-<!--        </column>-->
-<!--        <column name="last_name" type="varchar(50)">-->
-<!--            <constraints nullable="false"/>-->
-<!--        </column>-->
-<!--        <column name="type" type="varchar(20)">-->
-<!--            <constraints nullable="false"/>-->
-<!--        </column>-->
-<!--    </createTable>-->
+    <changeSet id="2" author="ojas.agashe@gmail.com">
+        <comment>Organization and Org User tables</comment>
+        <createTable tableName="org_users">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" foreignKeyName="fk_org_users-app_users" references="app_users(id)" />
+            </column>
+            <column name="phone_number" type="varchar(25)"/>
+        </createTable>
 
-
-
-
-
-
-
+        <createTable tableName="organizations">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(50)"/>
+            <column name="description" type="varchar(1000)"/>
+            <column name="org_logo" type="varchar(500)"/>
+            <column name="social_media_link" type="varchar(100)"/>
+            <column name="is_verified" type="BOOLEAN" defaultValueBoolean="false"/>
+            <column name="subscription" type="varchar(50)"/>
+            <column name="org_user_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
 </databaseChangeLog>
