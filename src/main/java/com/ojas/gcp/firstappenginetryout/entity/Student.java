@@ -1,10 +1,9 @@
 package com.ojas.gcp.firstappenginetryout.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,15 +20,14 @@ public class Student extends AppUser{
     private Long id;
     @Column(name = "school")
     private String school;
-    @Enumerated(EnumType.STRING)
     @Column(name = "grade")
-    private Grade grade;
+    private String grade;
     @OneToOne
     @JoinColumn(name = "user_id")
     @JsonBackReference
     private User user;
 
-    public Student(Long Id, Grade grade, String school) {
+    public Student(Long id, String grade, String school) {
         this.id = id;
         this.grade = grade;
         this.school = school;
@@ -55,11 +53,11 @@ public class Student extends AppUser{
         this.school = school;
     }
 
-    public Grade getGrade() {
+    public String getGrade() {
         return grade;
     }
 
-    public void setGrade(Grade grade) {
+    public void setGrade(String grade) {
         this.grade = grade;
     }
 

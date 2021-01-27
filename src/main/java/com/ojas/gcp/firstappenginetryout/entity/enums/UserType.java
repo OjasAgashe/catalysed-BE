@@ -1,9 +1,9 @@
-package com.ojas.gcp.firstappenginetryout.entity;
+package com.ojas.gcp.firstappenginetryout.entity.enums;
 
 public enum UserType {
     STUDENT("Student"),
     MENTOR("Mentor"),
-    ORGANIZATION_ADMIN("Organization Admin");
+    ORGANIZATION_USER("Organization User");
     private String value;
 
     UserType(String value) {

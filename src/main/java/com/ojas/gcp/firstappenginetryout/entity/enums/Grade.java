@@ -1,4 +1,4 @@
-package com.ojas.gcp.firstappenginetryout.entity;
+package com.ojas.gcp.firstappenginetryout.entity.enums;
 
 public enum Grade {
     PRE("Pre School"),

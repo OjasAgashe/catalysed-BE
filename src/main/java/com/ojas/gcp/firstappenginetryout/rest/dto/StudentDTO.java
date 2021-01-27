@@ -1,19 +1,18 @@
 package com.ojas.gcp.firstappenginetryout.rest.dto;
 
-import com.ojas.gcp.firstappenginetryout.entity.Grade;
 import java.util.List;
 
 public class StudentDTO {
     private Long id;
     private PersonDTO user;
     private String school;
-    private Grade grade;
+    private String grade;
     private String memberType;
     private List<String> mentors;
 
     public StudentDTO() {}
 
-    public StudentDTO(Long id, Long userId, String firstName, String lastName, Grade grade, String school) {
+    public StudentDTO(Long id, Long userId, String firstName, String lastName, String grade, String school) {
         this.id = id;
         this.user = new PersonDTO(userId, firstName, lastName);
         this.grade = grade;
@@ -44,11 +43,11 @@ public class StudentDTO {
         this.school = school;
     }
 
-    public Grade getGrade() {
+    public String getGrade() {
         return grade;
     }
 
-    public void setGrade(Grade grade) {
+    public void setGrade(String grade) {
         this.grade = grade;
     }
 

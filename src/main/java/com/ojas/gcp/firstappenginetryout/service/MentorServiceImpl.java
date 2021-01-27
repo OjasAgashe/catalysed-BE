@@ -1,7 +1,7 @@
 package com.ojas.gcp.firstappenginetryout.service;
 
 import com.ojas.gcp.firstappenginetryout.entity.Mentor;
-import com.ojas.gcp.firstappenginetryout.entity.UserType;
+import com.ojas.gcp.firstappenginetryout.entity.enums.UserType;
 import com.ojas.gcp.firstappenginetryout.repository.MentorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

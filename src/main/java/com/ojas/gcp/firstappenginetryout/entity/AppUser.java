@@ -1,5 +1,7 @@
 package com.ojas.gcp.firstappenginetryout.entity;
 
+import com.ojas.gcp.firstappenginetryout.entity.enums.UserType;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -95,7 +97,7 @@ public abstract class AppUser {
         this.type = type;
     }
 
-    public boolean getAccountActivated() {
+    public boolean isAccountActivated() {
         return accountActivated;
     }
 

@@ -1,6 +1,7 @@
 package com.ojas.gcp.firstappenginetryout.rest;
 
 import com.ojas.gcp.firstappenginetryout.entity.Mentor;
+import com.ojas.gcp.firstappenginetryout.rest.dto.RegistrationOrgUserDTO;
 import com.ojas.gcp.firstappenginetryout.rest.dto.UserDTO;
 import com.ojas.gcp.firstappenginetryout.service.EmailServiceImpl;
 import com.ojas.gcp.firstappenginetryout.service.MentorService;
@@ -66,5 +67,13 @@ public class RegistrationController {
     @GetMapping(value = "mentor/all")
     public List<Mentor > getAllMentors() {
         return mentorService.getMentors();
+    }
+
+
+    @PostMapping(value = "register/organization")
+    public ResponseEntity<Object> registerOrgUser(@RequestBody RegistrationOrgUserDTO orgUserDTO) throws Exception {
+        //add validations
+        registrationService.registerOrgUser(orgUserDTO);
+        return ResponseEntity.ok("User Registered Successfully");
     }
 }
