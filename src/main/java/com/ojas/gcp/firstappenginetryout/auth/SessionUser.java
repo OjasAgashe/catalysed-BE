@@ -1,17 +1,17 @@
 package com.ojas.gcp.firstappenginetryout.auth;
 
-import com.ojas.gcp.firstappenginetryout.entity.User;
+import com.ojas.gcp.firstappenginetryout.entity.AppUser;
+import com.ojas.gcp.firstappenginetryout.entity.enums.UserType;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.stream.Collectors;
+import java.util.Collections;
 
-public class AppUser implements UserDetails {
+public class SessionUser implements UserDetails {
     //using decorative design to deligate the AppUser (Principle) methods to the user entity methods
-    private User user;
+    private AppUser user;
+    private UserType userType;
+    private Long id;
 
 //    private String userName;
 //    private String password;
@@ -23,8 +23,10 @@ public class AppUser implements UserDetails {
 //        this.userName = userName;
 //    }
 
-    public AppUser(User user) {
+    public SessionUser(AppUser user) {
         this.user = user;
+        this.userType = user.getType();
+        this.id = user.getId();
 //        this.userName = user.getUserName();
 //        this.password = user.getPassword();
 //        this.active = user.isActive();
@@ -34,14 +36,15 @@ public class AppUser implements UserDetails {
 //        this.userName = userName;
     }
 
-    public AppUser() {
+    public SessionUser() {
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.stream(this.user.getRoles().split(","))
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+//        return Arrays.stream(this.user.getRoles().split(","))
+//                .map(SimpleGrantedAuthority::new)
+//                .collect(Collectors.toList());
+        return Collections.EMPTY_LIST;
     }
 
     @Override
@@ -51,7 +54,7 @@ public class AppUser implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.user.getUserName();
+        return this.user.getFirstName();
     }
 
     @Override
@@ -71,6 +74,22 @@ public class AppUser implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return this.user.isActive();
+        return this.user.isAccountActivated();
+    }
+
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

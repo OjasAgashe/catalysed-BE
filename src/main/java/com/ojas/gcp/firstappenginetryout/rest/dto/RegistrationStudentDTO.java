@@ -2,13 +2,17 @@ package com.ojas.gcp.firstappenginetryout.rest.dto;
 
 public class RegistrationStudentDTO extends RegistrationUserDTO {
     private Long organizationId;
+    private String school;
+    private String grade;
 
     public RegistrationStudentDTO() { }
 
     public RegistrationStudentDTO(String email, String password, String firstName,
-                                  String lastName, Long organizationId) {
+                                  String lastName, Long organizationId, String school, String grade) {
         super(email, password, firstName, lastName);
         this.organizationId = organizationId;
+        this.school = school;
+        this.grade = grade;
     }
 
     public Long getOrganizationId() {
@@ -17,5 +21,21 @@ public class RegistrationStudentDTO extends RegistrationUserDTO {
 
     public void setOrganizationId(Long organizationId) {
         this.organizationId = organizationId;
+    }
+
+    public String getSchool() {
+        return school;
+    }
+
+    public void setSchool(String school) {
+        this.school = school;
+    }
+
+    public String getGrade() {
+        return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
     }
 }

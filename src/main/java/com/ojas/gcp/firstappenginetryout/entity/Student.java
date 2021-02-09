@@ -22,10 +22,10 @@ public class Student extends AppUser{
     private String school;
     @Column(name = "grade")
     private String grade;
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    @JsonBackReference
-    private User user;
+//    @OneToOne
+//    @JoinColumn(name = "user_id")
+//    @JsonBackReference
+//    private User user;
 
     public Student(Long id, String grade, String school) {
         this.id = id;
@@ -61,11 +61,11 @@ public class Student extends AppUser{
         this.grade = grade;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
+//    public User getUser() {
+//        return user;
+//    }
+//
+//    public void setUser(User user) {
+//        this.user = user;
+//    }
 }

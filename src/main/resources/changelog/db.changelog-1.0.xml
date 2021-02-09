@@ -56,7 +56,7 @@
         </createTable>
 
         <createTable tableName="organizations">
-            <column name="id" type="BIGINT">
+            <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="name" type="varchar(50)">

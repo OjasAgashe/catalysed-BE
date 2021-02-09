@@ -1,8 +1,11 @@
 package com.ojas.gcp.firstappenginetryout.service;
 
+import com.ojas.gcp.firstappenginetryout.entity.AppUser;
 import com.ojas.gcp.firstappenginetryout.entity.OrganizationUser;
+import com.ojas.gcp.firstappenginetryout.entity.Student;
 import com.ojas.gcp.firstappenginetryout.entity.User;
 import com.ojas.gcp.firstappenginetryout.entity.enums.UserType;
+import com.ojas.gcp.firstappenginetryout.repository.AppUserRepository;
 import com.ojas.gcp.firstappenginetryout.repository.OrganizationUserRepository;
 import com.ojas.gcp.firstappenginetryout.repository.UserRepository;
 import com.ojas.gcp.firstappenginetryout.rest.dto.RegistrationOrgUserDTO;
@@ -16,12 +19,16 @@ import java.util.Optional;
 @Service
 public class RegistrationServiceImpl implements RegistrationService{
     private OrganizationUserRepository orgUserRepository;
+    private AppUserRepository appUserRepository;
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
 
-    public RegistrationServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public RegistrationServiceImpl(OrganizationUserRepository orgUserRepository, UserRepository userRepository,
+                                   PasswordEncoder passwordEncoder, AppUserRepository appUserRepository) {
+        this.orgUserRepository = orgUserRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.appUserRepository = appUserRepository;
     }
 
     @Override
@@ -37,9 +44,7 @@ public class RegistrationServiceImpl implements RegistrationService{
             2. Valid password
         */
         orgUserRepository.saveAndFlush(getUser(orgUserDTO));
-
         //generate Activation mail
-
     }
 
     @Override
@@ -50,6 +55,16 @@ public class RegistrationServiceImpl implements RegistrationService{
             throw new Exception("User already registered in system");
         }
         userRepository.saveAndFlush(getUser(userDTO));
+    }
+
+    @Override
+    public void registerAppUser(UserDTO userDTO) throws Exception {
+        //check if user already present
+        if (appUserRepository.findByEmail(userDTO.getEmail()).isPresent()) {
+            //add custom exception
+            throw new Exception("User already registered in system");
+        }
+        appUserRepository.saveAndFlush(getAppUser(userDTO));
     }
 
     // Need to create an object which extends userDTO for the old password verification
@@ -73,7 +88,7 @@ public class RegistrationServiceImpl implements RegistrationService{
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
         user.setPhoneNumber(userDTO.getPhoneNumber());
-        user.setAccountActivated(false);
+        user.setAccountActivated(true);
         return user;
     }
 
@@ -86,6 +101,19 @@ public class RegistrationServiceImpl implements RegistrationService{
         user.setFirstName(userDTO.getFirstName());
         user.setFirstName(userDTO.getLastName());
         user.setActive(true);
+        return user;
+    }
+
+    private AppUser getAppUser(UserDTO userDTO) {
+        Student user = new Student();
+        user.setEmail(userDTO.getEmail());
+        //TO-DO : Validate password format
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        user.setFirstName(userDTO.getFirstName());
+        user.setLastName(userDTO.getLastName());
+        user.setAccountActivated(false);
+        user.setType(UserType.STUDENT);
+        user.setSchool("VVS");
         return user;
     }
 }

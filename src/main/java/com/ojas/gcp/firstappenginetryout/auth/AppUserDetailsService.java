@@ -1,7 +1,7 @@
 package com.ojas.gcp.firstappenginetryout.auth;
 
-import com.ojas.gcp.firstappenginetryout.entity.User;
-import com.ojas.gcp.firstappenginetryout.repository.UserRepository;
+import com.ojas.gcp.firstappenginetryout.entity.AppUser;
+import com.ojas.gcp.firstappenginetryout.repository.AppUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,12 +20,13 @@ import java.util.Optional;
 public class AppUserDetailsService implements UserDetailsService {
 
     @Autowired
-    UserRepository userRepository;
+    AppUserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.findByEmail(email);
+        Optional<AppUser> user = userRepository.findByEmail(email);
         user.orElseThrow(() -> new UsernameNotFoundException("User " + email + "not found"));
-        return new AppUser(user.get());
+        
+        return new SessionUser(user.get());
     }
 }

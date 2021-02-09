@@ -1,0 +1,4 @@
+Organizations  :
+
+1. /organization/register -> register Org User
+2. /organization/details  -> create/update Org details

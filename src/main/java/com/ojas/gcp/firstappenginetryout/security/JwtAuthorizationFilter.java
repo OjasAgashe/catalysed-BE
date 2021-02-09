@@ -1,9 +1,9 @@
 package com.ojas.gcp.firstappenginetryout.security;
 
 import com.auth0.jwt.JWT;
-import com.ojas.gcp.firstappenginetryout.auth.AppUser;
-import com.ojas.gcp.firstappenginetryout.entity.User;
-import com.ojas.gcp.firstappenginetryout.repository.UserRepository;
+import com.ojas.gcp.firstappenginetryout.auth.SessionUser;
+import com.ojas.gcp.firstappenginetryout.entity.AppUser;
+import com.ojas.gcp.firstappenginetryout.repository.AppUserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,9 +21,9 @@ import java.util.Optional;
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
-    private UserRepository userRepository;
+    private AppUserRepository userRepository;
 
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserRepository userRepository) {
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, AppUserRepository userRepository) {
         super(authenticationManager);
         this.userRepository = userRepository;
     }
@@ -61,9 +61,9 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             // Search in the DB if we find the user by token subject (username)
             // If so, then grab user details and create spring auth token using username, pass, authorities/roles
             if (email != null) {
-                Optional<User> user = userRepository.findByEmail(email);
+                Optional<AppUser> user = userRepository.findByEmail(email);
                 user.orElseThrow(() -> new UsernameNotFoundException("User " + email + "not registered in system"));
-                AppUser principal = new AppUser(user.get());
+                SessionUser principal = new SessionUser(user.get());
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(email, null, principal.getAuthorities());
                 return auth;
             }

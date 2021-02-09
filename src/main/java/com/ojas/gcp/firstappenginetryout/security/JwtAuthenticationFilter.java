@@ -2,7 +2,7 @@ package com.ojas.gcp.firstappenginetryout.security;
 
 import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ojas.gcp.firstappenginetryout.auth.AppUser;
+import com.ojas.gcp.firstappenginetryout.auth.SessionUser;
 import com.ojas.gcp.firstappenginetryout.auth.AuthenticationRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -55,7 +55,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         // Grab principal
-        AppUser principal = (AppUser) authResult.getPrincipal();
+        SessionUser principal = (SessionUser) authResult.getPrincipal();
 
         // Create JWT Token
         String token = JWT.create()

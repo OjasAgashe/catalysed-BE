@@ -1,6 +1,9 @@
 package com.ojas.gcp.firstappenginetryout.rest;
 
+import com.ojas.gcp.firstappenginetryout.auth.SessionUser;
+import com.ojas.gcp.firstappenginetryout.entity.AppUser;
 import com.ojas.gcp.firstappenginetryout.entity.Mentor;
+import com.ojas.gcp.firstappenginetryout.rest.dto.OrganizationDetailsDTO;
 import com.ojas.gcp.firstappenginetryout.rest.dto.RegistrationOrgUserDTO;
 import com.ojas.gcp.firstappenginetryout.rest.dto.UserDTO;
 import com.ojas.gcp.firstappenginetryout.service.EmailServiceImpl;
@@ -8,6 +11,8 @@ import com.ojas.gcp.firstappenginetryout.service.MentorService;
 import com.ojas.gcp.firstappenginetryout.service.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -30,14 +35,22 @@ public class RegistrationController {
     }
 
     @GetMapping(value = "register")
-    public String getRegistrationPage() throws Exception {
-        return ("<h1>Welcome to registration</h1>");
+    public String getRegistrationPage(@AuthenticationPrincipal Authentication authentication) throws Exception {
+        SessionUser sessionUser = (SessionUser)authentication.getPrincipal();
+        return ("<h1>Welcome to " + sessionUser.getUsername() +"registration</h1>");
     }
 
-    @PostMapping(value = "register")
-    public ResponseEntity<Object> registerUser(@RequestBody UserDTO userDTO) throws Exception {
+    @PostMapping(value = "organization/register")
+    public ResponseEntity<Object> registerUser(@RequestBody RegistrationOrgUserDTO userDTO) throws Exception {
         //add validations
-        registrationService.registerUser(userDTO);
+        registrationService.registerOrgUser(userDTO);
+        return ResponseEntity.ok("User Registered Successfully");
+    }
+
+    @PostMapping(value = "student/details")
+    public ResponseEntity<Object> updateStudentDetails(@RequestBody UserDTO userDTO) throws Exception {
+        //add validations
+        registrationService.registerAppUser(userDTO);
         return ResponseEntity.ok("User Registered Successfully");
     }
 
@@ -65,7 +78,9 @@ public class RegistrationController {
     }
 
     @GetMapping(value = "mentor/all")
-    public List<Mentor > getAllMentors() {
+    public List<Mentor > getAllMentors(@AuthenticationPrincipal Authentication authentication) {
+        SessionUser user = (SessionUser)authentication.getPrincipal();
+        System.out.println("First NAme :" + user.getUsername());
         return mentorService.getMentors();
     }
 

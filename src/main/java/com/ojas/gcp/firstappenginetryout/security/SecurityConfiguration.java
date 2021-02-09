@@ -74,7 +74,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/admin").hasRole("ADMIN") //current and all nested paths
                 .antMatchers("/user").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/", "static/css", "static/js", "/login", "/register", "/changePassword").permitAll()
+                .antMatchers("/", "static/css", "static/js", "/login", "/organization/register", "/changePassword").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin();
