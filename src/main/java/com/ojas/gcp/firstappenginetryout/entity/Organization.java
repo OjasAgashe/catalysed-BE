@@ -20,6 +20,8 @@ public class Organization {
     private String description;
     @Column(name = "org_logo")
     private String orgLogo;
+    @Column(name = "website")
+    private String website;
     //Make an entity that supports LnkedIn and FaceBook records
     @Column(name = "social_media_link")
     private String socialMediaLink;
@@ -37,12 +39,13 @@ public class Organization {
 
     }
 
-    public Organization(Long id, String name, String description, String orgLogo, String socialMediaLink,
+    public Organization(Long id, String name, String description, String orgLogo, String website, String socialMediaLink,
                         boolean isVerified, String subscription, OrganizationUser organizationUser) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.orgLogo = orgLogo;
+        this.website = website;
         this.socialMediaLink = socialMediaLink;
         this.isVerified = isVerified;
         this.subscription = subscription;
@@ -79,6 +82,18 @@ public class Organization {
 
     public void setOrgLogo(String orgLogo) {
         this.orgLogo = orgLogo;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
+    public boolean isVerified() {
+        return isVerified;
     }
 
     public String getSocialMediaLink() {

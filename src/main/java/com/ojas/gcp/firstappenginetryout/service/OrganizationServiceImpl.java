@@ -51,6 +51,7 @@ public class OrganizationServiceImpl implements OrganizationService{
         organization.setName(detailsDTO.getName());
         organization.setDescription(detailsDTO.getDescription());
         organization.setOrgLogo(detailsDTO.getOrgLogo());
+        organization.setWebsite(detailsDTO.getWebsite());
         organization.setSocialMediaLink(detailsDTO.getSocialMediaLink());
         organization.setVerified(false);
         organization.setOrganizationUser(getOrganizationUser(user.getId()));
@@ -64,6 +65,7 @@ public class OrganizationServiceImpl implements OrganizationService{
         orgDTO.setName(org.getName());
         orgDTO.setDescription(org.getDescription());
         orgDTO.setOrgLogo(org.getOrgLogo());
+        orgDTO.setWebsite(org.getWebsite());
         orgDTO.setSocialMediaLink(org.getSocialMediaLink());
         orgDTO.setVerified(org.getVerified());
         orgDTO.setSubscription(OrgSubscriptionType.BASIC.getValue());
