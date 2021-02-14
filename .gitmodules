@@ -1,0 +1,4 @@
+[submodule "src/main/frontend"]
+	path = src/main/frontend
+	url = git@github.com:OjasAgashe/catalysed-FE.git
+	branch = master
