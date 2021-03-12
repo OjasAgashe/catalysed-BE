@@ -15,27 +15,28 @@ spring:
   thymeleaf:
     prefix: classpath:/templates/mail/
   cloud:
-    appId: first-spring-boot-tryout
+    appId: catalysed-iteration1
     gcp:
       sql:
-        database-name: pathshala_tryout
-        instance-connection-name: first-spring-boot-tryout:us-central1:pathshala-tryout
+        database-name: catalysed
+        instance-connection-name: catalysed-iteration1:asia-south1:catalysed
+#        first-spring-boot-tryout:us-central1:pathshala-tryout
   datasource:
     username: root
     password: password
-    url: jdbc:mysql://localhost:3306/pathshala_tryout
+#    url: jdbc:mysql://localhost:3306/catalysed
   jpa:
     hibernate:
       ddl-auto: none
   liquibase:
     change-log: classpath:changelog/index.xml
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: 1074475363733-81ecu1okc5u0n4ncm4hf2hclgtsm3roo.apps.googleusercontent.com
-            client-secret: re3fTSmYkM4tUivBFnKqatDT
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          google:
+#            client-id: 1074475363733-81ecu1okc5u0n4ncm4hf2hclgtsm3roo.apps.googleusercontent.com
+#            client-secret: re3fTSmYkM4tUivBFnKqatDT
   mail:
     host: smtp.gmail.com
     port: 587
@@ -51,5 +52,16 @@ spring:
             timeout: 5000
             writetimeout: 5000
 
+#  data:
+#    rest:
+#      base-path: /api
+security:
+  jwt:
+    token:
+      secret-key: AdiOjaSak
+      expire-length: 300000 # 5 minutes duration by default: 5 minutes * 60 seconds * 1000 miliseconds
 profiles: production
 message: "Hello, from App Engine!"
+#server:
+#  servlet:
+#    context-path: /api

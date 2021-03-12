@@ -10,7 +10,6 @@ import java.util.Collections;
 public class SessionUser implements UserDetails {
     //using decorative design to deligate the AppUser (Principle) methods to the user entity methods
     private AppUser user;
-    private UserType userType;
     private Long id;
 
 //    private String userName;
@@ -25,7 +24,6 @@ public class SessionUser implements UserDetails {
 
     public SessionUser(AppUser user) {
         this.user = user;
-        this.userType = user.getType();
         this.id = user.getId();
 //        this.userName = user.getUserName();
 //        this.password = user.getPassword();
@@ -78,15 +76,15 @@ public class SessionUser implements UserDetails {
     }
 
     public UserType getUserType() {
-        return userType;
+        return user.getType();
     }
 
-    public void setUserType(UserType userType) {
-        this.userType = userType;
+    public String getEmailId() {
+        return this.user.getEmail();
     }
 
     public Long getId() {
-        return id;
+        return this.user.getId();
     }
 
     public void setId(Long id) {

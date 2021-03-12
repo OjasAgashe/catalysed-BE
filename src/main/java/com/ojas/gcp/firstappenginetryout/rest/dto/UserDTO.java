@@ -1,5 +1,7 @@
 package com.ojas.gcp.firstappenginetryout.rest.dto;
 
+import com.ojas.gcp.firstappenginetryout.entity.enums.UserType;
+
 public class UserDTO {
     private Long id;
     private String email;
@@ -8,8 +10,9 @@ public class UserDTO {
     private String userName;
     private String subscriptionType;
     private String password;
-    private boolean active;
+    private boolean isActive;
     private String roles;
+    private UserType userType;
 
     public UserDTO() {}
 
@@ -20,6 +23,13 @@ public class UserDTO {
         this.userName = userName;
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public UserDTO(Long id, String userName, String email, UserType userType, boolean isActive) {
+        this.userName = userName;
+        this.email = email;
+        this.userType = userType;
+        this.isActive = isActive;
     }
 
     public Long getId() {
@@ -79,11 +89,11 @@ public class UserDTO {
     }
 
     public boolean isActive() {
-        return active;
+        return isActive;
     }
 
     public void setActive(boolean active) {
-        this.active = active;
+        this.isActive = active;
     }
 
     public String getRoles() {
@@ -92,5 +102,13 @@ public class UserDTO {
 
     public void setRoles(String roles) {
         this.roles = roles;
+    }
+
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
     }
 }

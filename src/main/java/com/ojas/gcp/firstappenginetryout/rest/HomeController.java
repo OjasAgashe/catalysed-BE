@@ -14,10 +14,10 @@ public class HomeController {
         return ResponseEntity.ok(message);
     }
 
-    @GetMapping("/")
-    public String helloAll() {
-        return ("<h1>Welcome All</h1>");
-    }
+//    @GetMapping("/")
+//    public String helloAll() {
+//        return ("<h1>Welcome All</h1>");
+//    }
 
     @GetMapping("/user")
     public String helloUser() {
