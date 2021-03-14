@@ -4,7 +4,7 @@ import com.ojas.gcp.firstappenginetryout.auth.AppUserDetailsService;
 import com.ojas.gcp.firstappenginetryout.auth.AuthenticationRequest;
 import com.ojas.gcp.firstappenginetryout.auth.AuthenticationResponse;
 import com.ojas.gcp.firstappenginetryout.auth.SessionUser;
-import com.ojas.gcp.firstappenginetryout.rest.dto.UserDTO;
+import com.ojas.gcp.firstappenginetryout.rest.dto.AuthenticationUserDTO;
 import com.ojas.gcp.firstappenginetryout.security.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,11 +39,11 @@ public class LoginController {
         }
         SessionUser userDetails = (SessionUser)userDetailsService.loadUserByUsername(authenticationRequest.getEmail());
         String jwt = jwtTokenUtils.generateToken(userDetails);
-        return ResponseEntity.ok(new AuthenticationResponse(generateUserDTO(userDetails), jwt));
+        return ResponseEntity.ok(new AuthenticationResponse(generateAuthUserDTO(userDetails), jwt));
     }
 
-    private UserDTO generateUserDTO(SessionUser sessionUser) {
-        return new UserDTO(sessionUser.getId(), sessionUser.getUsername(), sessionUser.getEmailId(),
-                sessionUser.getUserType(), sessionUser.isEnabled());
+    private AuthenticationUserDTO generateAuthUserDTO(SessionUser sessionUser) {
+        return new AuthenticationUserDTO(sessionUser.getId(), sessionUser.getEmailId(), sessionUser.getUsername(),
+                sessionUser.isEnabled(), sessionUser.getUserType());
     }
 }

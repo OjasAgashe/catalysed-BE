@@ -85,7 +85,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
-                .authorizeRequests().antMatchers("/", "/_ah/start", "/app/**", "/static/**","/authenticate", "/user", "/organization/register", "/manifest.json").permitAll()
+                .authorizeRequests().antMatchers("/", "/_ah/start", "/app/**", "/static/**","/authenticate", "/admin", "/organization/register", "/manifest.json").permitAll()
                 .anyRequest().authenticated().and().
                 exceptionHandling().and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
@@ -100,7 +100,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     response.setContentType("application/json;charset=UTF-8");
                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                     response.getWriter().write(objectMapper.writeValueAsString(
-                            new ErrorResponseDTO(LocalDateTime.now().toString(), "Access denied")));
+                            new ErrorResponseDTO(LocalDateTime.now().toString(), "Access denied, Go to home page : https://catalysed-iteration1.el.r.appspot.com/")));
                 });
         // , "/static/**/**"  "/organizationDetail", "/organizer",
     }

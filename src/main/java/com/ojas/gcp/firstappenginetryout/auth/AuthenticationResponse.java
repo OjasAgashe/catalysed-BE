@@ -1,24 +1,24 @@
 package com.ojas.gcp.firstappenginetryout.auth;
 
-import com.ojas.gcp.firstappenginetryout.rest.dto.UserDTO;
+import com.ojas.gcp.firstappenginetryout.rest.dto.AuthenticationUserDTO;
 
 public class AuthenticationResponse {
-    private UserDTO user;
+    private AuthenticationUserDTO user;
     private String jwt;
 
     public AuthenticationResponse() {
     }
 
-    public AuthenticationResponse(UserDTO user, String jwt) {
+    public AuthenticationResponse(AuthenticationUserDTO user, String jwt) {
         this.user = user;
         this.jwt = jwt;
     }
 
-    public UserDTO getUser() {
+    public AuthenticationUserDTO getUser() {
         return user;
     }
 
-    public void setUser(UserDTO user) {
+    public void setUser(AuthenticationUserDTO user) {
         this.user = user;
     }
 

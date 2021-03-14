@@ -32,15 +32,25 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         String username = null;
         String jwt = null;
-        System.out.println("Auth Header : " + authorizationHeader);
+//        System.out.println("Auth Header : " + authorizationHeader);
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
             username = jwtUtil.extractUsername(jwt);
-            System.out.println("Username : " + username);
-
+//            System.out.println("Username : " + username);
         }
-
+//        Cookie[] cookies = request.getCookies();
+//        if (cookies != null && cookies.length != 0) {
+//            for (Cookie cookie : cookies) {
+//                if ("accessToken".equals(cookie.getName())) {
+//                    jwt = URLDecoder.decode(cookie.getValue(), "UTF-8");
+//                }
+//            }
+//            if (jwt != null && jwt.startsWith("Bearer ")) {
+//                jwt = jwt.substring(7);
+//                username = jwtUtil.extractUsername(jwt);
+//            }
+//        }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
@@ -50,7 +60,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             if (jwtUtil.validateToken(jwt, userDetails)) {
 
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-                        userDetails.getUsername(), null, userDetails.getAuthorities());
+                        userDetails, null, userDetails.getAuthorities());
                 usernamePasswordAuthenticationToken
                         .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
@@ -58,5 +68,4 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
         chain.doFilter(request, response);
     }
-
 }

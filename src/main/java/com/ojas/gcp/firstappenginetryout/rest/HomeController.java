@@ -1,7 +1,10 @@
 package com.ojas.gcp.firstappenginetryout.rest;
 
+import com.ojas.gcp.firstappenginetryout.auth.SessionUser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,8 +23,9 @@ public class HomeController {
 //    }
 
     @GetMapping("/user")
-    public String helloUser() {
-        return ("<h1>Welcome User</h1>");
+    public String helloUser(@AuthenticationPrincipal Authentication authentication) {
+        SessionUser user = (SessionUser)authentication.getPrincipal();
+        return (String.format("<h1>Welcome %s</h1>", user.getUsername()));
     }
 
     @GetMapping("/admin")
