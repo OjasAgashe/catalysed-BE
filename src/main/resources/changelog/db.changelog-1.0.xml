@@ -65,6 +65,7 @@
             <column name="description" type="varchar(1000)"/>
             <column name="org_logo" type="varchar(500)"/>
             <column name="social_media_link" type="varchar(100)"/>
+            <column name="website" type="varchar(100)"/>
             <column name="is_verified" type="BOOLEAN" defaultValueBoolean="false"/>
             <column name="subscription" type="varchar(50)"/>
             <column name="org_user_id" type="BIGINT">
