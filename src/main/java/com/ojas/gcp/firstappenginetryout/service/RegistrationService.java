@@ -1,10 +1,16 @@
 package com.ojas.gcp.firstappenginetryout.service;
 
+import com.ojas.gcp.firstappenginetryout.rest.dto.RegistrationMentorDTO;
 import com.ojas.gcp.firstappenginetryout.rest.dto.RegistrationOrgUserDTO;
+import com.ojas.gcp.firstappenginetryout.rest.dto.RegistrationStudentDTO;
 import com.ojas.gcp.firstappenginetryout.rest.dto.UserDTO;
 
 public interface RegistrationService {
     public void registerOrgUser(RegistrationOrgUserDTO orgUserDTO) throws Exception;
+
+    public void registerStudent(RegistrationStudentDTO studentDTO) throws Exception;
+
+    public void registerMentor(RegistrationMentorDTO mentorDTO) throws Exception;
 
     public void registerAppUser(UserDTO userDTO) throws Exception;
 

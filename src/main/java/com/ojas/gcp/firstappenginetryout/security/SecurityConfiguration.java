@@ -17,6 +17,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
@@ -85,14 +86,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
-                .authorizeRequests().antMatchers("/", "/_ah/start", "/app/**", "/static/**","/authenticate", "/admin", "/organization/register", "/manifest.json").permitAll()
+                .authorizeRequests().antMatchers("/", "/_ah/start", "/app/**", "/static/**","/authenticate",
+                "/admin", "/register/organization", "/register/student", "/register/mentor", "/manifest.json",
+                "/program", "/program/**", "/organization/programs", "/organization/program/**", "/test/**").permitAll()
                 .anyRequest().authenticated().and().
                 exceptionHandling().and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         //Exception handling configuration
-
         http.exceptionHandling()
                 .authenticationEntryPoint(
                 (request, response, e) ->
@@ -102,6 +104,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     response.getWriter().write(objectMapper.writeValueAsString(
                             new ErrorResponseDTO(LocalDateTime.now().toString(), "Access denied, Go to home page : https://catalysed-iteration1.el.r.appspot.com/")));
                 });
+
+        //TO-DO : Remove for prod build
+        http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
+
         // , "/static/**/**"  "/organizationDetail", "/organizer",
     }
 

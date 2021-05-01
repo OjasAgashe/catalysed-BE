@@ -10,7 +10,7 @@
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="email" type="varchar(50)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" unique="true"/>
             </column>
             <column name="password" type="varchar(100)">
                 <constraints nullable="false"/>
@@ -62,7 +62,7 @@
             <column name="name" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
-            <column name="description" type="varchar(1000)"/>
+            <column name="description" type="TEXT"/>
             <column name="org_logo" type="varchar(500)"/>
             <column name="social_media_link" type="varchar(100)"/>
             <column name="website" type="varchar(100)"/>
@@ -71,6 +71,56 @@
             <column name="org_user_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="3" author="ojas.v.agashe@gmail.com">
+        <comment>Creating Program related tables</comment>
+        <createTable tableName="programs">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="title" type="varchar(250)"/>
+            <column name="description" type="TEXT"/>
+            <column name="tentative_start_date" type="varchar(50)"/>
+            <column name="duration_in_months" type="SMALLINT"/>
+            <column name="mode" type="varchar(25)"/>
+            <column name="language_requirements" type="varchar(500)"/>
+            <column name="student_age_from" type="TINYINT"/>
+            <column name="student_age_to" type="TINYINT"/>
+            <column name="program_link" type="varchar(250)"/>
+            <column name="coordinator_name" type="varchar(100)"/>
+            <column name="coordinator_email" type="varchar(50)"/>
+            <column name="coordinator_phone_extension" type="varchar(10)"/>
+            <column name="coordinator_phone_number" type="varchar(25)"/>
+        </createTable>
+
+        <createTable tableName="program_student_fields">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="program_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_program_student_fields" references="programs(id)"/>
+            </column>
+            <column name="subject_requirements" type="varchar(500)"/>
+            <column name="openings" type="SMALLINT"/>
+            <column name="apply_by" type="varchar(50)"/>
+            <column name="is_paid" type="BOOLEAN" defaultValueBoolean="false"/>
+            <column name="program_fees" type="DECIMAL(10,2)"/>
+            <column name="instructions" type="TEXT"/>
+        </createTable>
+
+        <createTable tableName="program_mentor_fields">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="program_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_program_mentor_fields" references="programs(id)"/>
+            </column>
+            <column name="subject_requirements" type="varchar(500)"/>
+            <column name="openings" type="SMALLINT"/>
+            <column name="apply_by" type="varchar(50)"/>
+            <column name="instructions" type="TEXT"/>
         </createTable>
     </changeSet>
 </databaseChangeLog>

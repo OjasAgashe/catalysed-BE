@@ -6,8 +6,8 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface OrganizationUserRepository extends JpaRepository<OrganizationUser, Long> {
-    Optional<OrganizationUser> findById(Long id);
+public interface OrganizationUserRepository extends AppUserBaseRepository<OrganizationUser>{
+//    Optional<OrganizationUser> findById(Long id);
 
     Optional<OrganizationUser> findByEmail(String email);
 }

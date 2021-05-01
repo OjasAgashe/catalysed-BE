@@ -1,5 +1,10 @@
 package com.ojas.gcp.firstappenginetryout.rest.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RegistrationStudentDTO extends RegistrationUserDTO {
     private Long organizationId;
     private String school;
