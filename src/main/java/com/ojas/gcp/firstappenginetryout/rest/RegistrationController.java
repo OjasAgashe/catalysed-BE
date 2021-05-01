@@ -1,12 +1,9 @@
 package com.ojas.gcp.firstappenginetryout.rest;
 
 import com.ojas.gcp.firstappenginetryout.auth.SessionUser;
-import com.ojas.gcp.firstappenginetryout.entity.AppUser;
 import com.ojas.gcp.firstappenginetryout.entity.Mentor;
-import com.ojas.gcp.firstappenginetryout.rest.dto.OrganizationDetailsDTO;
-import com.ojas.gcp.firstappenginetryout.rest.dto.RegistrationOrgUserDTO;
-import com.ojas.gcp.firstappenginetryout.rest.dto.UserDTO;
-import com.ojas.gcp.firstappenginetryout.service.EmailServiceImpl;
+import com.ojas.gcp.firstappenginetryout.rest.dto.*;
+import com.ojas.gcp.firstappenginetryout.service.impl.EmailServiceImpl;
 import com.ojas.gcp.firstappenginetryout.service.MentorService;
 import com.ojas.gcp.firstappenginetryout.service.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,10 +37,24 @@ public class RegistrationController {
         return ("<h1>Welcome to " + sessionUser.getUsername() +"registration</h1>");
     }
 
-    @PostMapping(value = "organization/register")
-    public ResponseEntity<Object> registerUser(@RequestBody RegistrationOrgUserDTO userDTO) throws Exception {
+    @PostMapping(value = "register/organization")
+    public ResponseEntity<Object> registerOrgUser(@RequestBody RegistrationOrgUserDTO userDTO) throws Exception {
         //add validations
         registrationService.registerOrgUser(userDTO);
+        return ResponseEntity.ok("User Registered Successfully");
+    }
+
+    @PostMapping(value = "register/student")
+    public ResponseEntity<Object> registerStudent(@RequestBody RegistrationStudentDTO userDTO) throws Exception {
+        //add validations
+        registrationService.registerStudent(userDTO);
+        return ResponseEntity.ok("User Registered Successfully");
+    }
+
+    @PostMapping(value = "register/mentor")
+    public ResponseEntity<Object> registerMentor(@RequestBody RegistrationMentorDTO userDTO) throws Exception {
+        //add validations
+        registrationService.registerMentor(userDTO);
         return ResponseEntity.ok("User Registered Successfully");
     }
 
@@ -53,7 +64,6 @@ public class RegistrationController {
         registrationService.registerAppUser(userDTO);
         return ResponseEntity.ok("User Registered Successfully");
     }
-
 
     @PutMapping(value = "changePassword")
     public ResponseEntity<Object> changePassword(@RequestBody UserDTO userDTO) throws Throwable {
@@ -78,17 +88,9 @@ public class RegistrationController {
     }
 
     @GetMapping(value = "mentor/all")
-    public List<Mentor > getAllMentors(@AuthenticationPrincipal Authentication authentication) {
+    public List<Mentor> getAllMentors(@AuthenticationPrincipal Authentication authentication) {
         SessionUser user = (SessionUser)authentication.getPrincipal();
         System.out.println("First NAme :" + user.getUsername());
         return mentorService.getMentors();
-    }
-
-
-    @PostMapping(value = "register/organization")
-    public ResponseEntity<Object> registerOrgUser(@RequestBody RegistrationOrgUserDTO orgUserDTO) throws Exception {
-        //add validations
-        registrationService.registerOrgUser(orgUserDTO);
-        return ResponseEntity.ok("User Registered Successfully");
     }
 }
