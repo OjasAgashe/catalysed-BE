@@ -15,11 +15,11 @@ spring:
   thymeleaf:
     prefix: classpath:/templates/mail/
   cloud:
-    appId: catalysed-iteration1
+    appId: level-abode-312509
     gcp:
       sql:
         database-name: catalysed
-        instance-connection-name: catalysed-iteration1:asia-south1:catalysed
+        instance-connection-name: level-abode-312509:asia-south1:catalysed-db
 #        first-spring-boot-tryout:us-central1:pathshala-tryout
   datasource:
     username: root
