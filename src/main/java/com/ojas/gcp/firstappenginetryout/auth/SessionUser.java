@@ -72,7 +72,7 @@ public class SessionUser implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return this.user.isAccountActivated();
+        return true;
     }
 
     public UserType getUserType() {

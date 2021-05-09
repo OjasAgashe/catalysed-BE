@@ -74,7 +74,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     //AuthManagerBuilder looks for a PaswordEncode bean, and we can return diff types of encoders
     @Bean
     public PasswordEncoder getPasswordEncoder() {
-//        return NoOpPasswordEncoder.getInstance();
         return new BCryptPasswordEncoder();
     }
 
@@ -88,7 +87,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .authorizeRequests().antMatchers("/", "/_ah/start", "/app/**", "/static/**","/authenticate",
                 "/admin", "/register/organization", "/register/student", "/register/mentor", "/manifest.json",
-                "/program", "/program/**", "/organization/programs", "/organization/program/**", "/test/**").permitAll()
+                "/program", "/program/**", "/test/**").permitAll()
+
+//        "/program", "/program/**", "/organization/programs", "/organization/program/**", "/test/**").permitAll()
                 .anyRequest().authenticated().and().
                 exceptionHandling().and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
@@ -102,7 +103,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     response.setContentType("application/json;charset=UTF-8");
                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                     response.getWriter().write(objectMapper.writeValueAsString(
-                            new ErrorResponseDTO(LocalDateTime.now().toString(), "Access denied, Go to home page : https://catalysed-iteration1.el.r.appspot.com/")));
+                            new ErrorResponseDTO(LocalDateTime.now().toString(), "Access denied, Go to home page : https://level-abode-312509.el.r.appspot.com/")));
                 });
 
         //TO-DO : Remove for prod build
