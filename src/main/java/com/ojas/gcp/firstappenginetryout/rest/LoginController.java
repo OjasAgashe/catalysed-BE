@@ -30,16 +30,16 @@ public class LoginController {
 
     @PostMapping
     public ResponseEntity<?> authenticateAppUser(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
-        try {
-            System.out.println("Auth starting  ......." + authenticationRequest.getEmail() + "......." + authenticationRequest.getPassword());
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword()));
-            System.out.println("Auth done properly .......");
+//        try {
+        System.out.println("Auth starting  ......." + authenticationRequest.getEmail() + "......." + authenticationRequest.getPassword());
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword()));
+        System.out.println("Auth done properly .......");
 
-        } catch (BadCredentialsException ex) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect email or password");
-//            throw new Exception("Incorrect email or password");
-        }
+//        } catch (BadCredentialsException ex) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect email or password");
+////            throw new Exception("Incorrect email or password");
+//        }
         System.out.println("Creating session object");
 
         SessionUser userDetails = (SessionUser)userDetailsService.loadUserByUsername(authenticationRequest.getEmail());

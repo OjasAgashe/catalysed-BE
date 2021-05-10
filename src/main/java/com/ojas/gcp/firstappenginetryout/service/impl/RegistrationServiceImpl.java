@@ -6,6 +6,7 @@ import com.ojas.gcp.firstappenginetryout.entity.OrganizationUser;
 import com.ojas.gcp.firstappenginetryout.entity.Student;
 import com.ojas.gcp.firstappenginetryout.entity.User;
 import com.ojas.gcp.firstappenginetryout.entity.enums.UserType;
+import com.ojas.gcp.firstappenginetryout.exception.DuplicateResourceException;
 import com.ojas.gcp.firstappenginetryout.repository.AppUserRepository;
 import com.ojas.gcp.firstappenginetryout.repository.MentorRepository;
 import com.ojas.gcp.firstappenginetryout.repository.OrganizationUserRepository;
@@ -50,7 +51,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         //check if user already present
         if (orgUserRepository.findByEmail(orgUserDTO.getEmail()).isPresent()) {
             //add custom exception
-            throw new Exception("User already registered in system - Please Login");
+            throw new DuplicateResourceException("User already registered in system - Please Login");
         }
         /*
             validations
@@ -65,7 +66,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public void registerStudent(RegistrationStudentDTO studentDTO) throws Exception {
         if (studentRepository.findByEmail(studentDTO.getEmail()).isPresent()) {
-            throw new Exception("User already registered in system - Please Login");
+            throw new DuplicateResourceException("User already registered in system - Please Login");
         }
         studentRepository.saveAndFlush(getUser(studentDTO));
         emailService.sendMemeMessage("ojasagashea74@gmail.com", "Welcome mail");
@@ -74,7 +75,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public void registerMentor(RegistrationMentorDTO mentorDTO) throws Exception {
         if (mentorRepository.findByEmail(mentorDTO.getEmail()).isPresent()) {
-            throw new Exception("User already registered in system - Please Login");
+            throw new DuplicateResourceException("User already registered in system - Please Login");
         }
         mentorRepository.saveAndFlush(getUser(mentorDTO));
         emailService.sendMemeMessage("ojasagashea74@gmail.com", "Welcome mail");

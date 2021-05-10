@@ -25,7 +25,7 @@ public class AppUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<AppUser> user = userRepository.findByEmail(email);
-        user.orElseThrow(() -> new UsernameNotFoundException("User " + email + "not found"));
+        user.orElseThrow(() -> new UsernameNotFoundException("User " + email + "not found in system"));
         
         return new SessionUser(user.get());
     }
