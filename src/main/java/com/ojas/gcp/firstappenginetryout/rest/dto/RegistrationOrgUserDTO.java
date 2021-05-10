@@ -1,21 +1,21 @@
 package com.ojas.gcp.firstappenginetryout.rest.dto;
 
 public class RegistrationOrgUserDTO extends RegistrationUserDTO {
-    private String phoneNumber;
+    private RegistrationOrgDetailsDTO orgDetails;
 
     public RegistrationOrgUserDTO() { }
 
     public RegistrationOrgUserDTO(String email, String password, String firstName,
-                                 String lastName, String phoneNumber) {
+                                 String lastName, RegistrationOrgDetailsDTO orgDetails) {
         super(email, password, firstName, lastName);
-        this.phoneNumber = phoneNumber;
+        this.orgDetails = orgDetails;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public RegistrationOrgDetailsDTO getOrgDetails() {
+        return orgDetails;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setOrgDetails(RegistrationOrgDetailsDTO orgDetails) {
+        this.orgDetails = orgDetails;
     }
 }

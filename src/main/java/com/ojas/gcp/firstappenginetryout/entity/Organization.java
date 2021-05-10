@@ -22,7 +22,8 @@ public class Organization {
     private String orgLogo;
     @Column(name = "website")
     private String website;
-    //Make an entity that supports LnkedIn and FaceBook records
+    @Column(name = "social_media_code")
+    private String socialMediaCode;
     @Column(name = "social_media_link")
     private String socialMediaLink;
     @Column(name = "is_verified")
@@ -39,17 +40,24 @@ public class Organization {
 
     }
 
-    public Organization(Long id, String name, String description, String orgLogo, String website, String socialMediaLink,
-                        boolean isVerified, String subscription, OrganizationUser organizationUser) {
-        this.id = id;
+    public Organization(String name, String description, String website, String socialMediaCode, String socialMediaLink) {
+        this.name = name;
+        this.description = description;
+        this.website = website;
+        this.socialMediaCode = socialMediaCode;
+        this.socialMediaLink = socialMediaLink;
+    }
+
+    public Organization(String name, String description, String orgLogo, String website, String socialMediaCode,
+                        String socialMediaLink, boolean isVerified, String subscription) {
         this.name = name;
         this.description = description;
         this.orgLogo = orgLogo;
         this.website = website;
+        this.socialMediaCode = socialMediaCode;
         this.socialMediaLink = socialMediaLink;
         this.isVerified = isVerified;
         this.subscription = subscription;
-        this.organizationUser = organizationUser;
     }
 
     public Long getId() {
@@ -102,6 +110,14 @@ public class Organization {
 
     public void setSocialMediaLink(String socialMediaLink) {
         this.socialMediaLink = socialMediaLink;
+    }
+
+    public String getSocialMediaCode() {
+        return socialMediaCode;
+    }
+
+    public void setSocialMediaCode(String socialMediaCode) {
+        this.socialMediaCode = socialMediaCode;
     }
 
     public boolean getVerified() {

@@ -5,7 +5,12 @@ import com.ojas.gcp.firstappenginetryout.rest.dto.RegistrationOrgUserDTO;
 import com.ojas.gcp.firstappenginetryout.rest.dto.RegistrationStudentDTO;
 import com.ojas.gcp.firstappenginetryout.rest.dto.UserDTO;
 
+import java.util.List;
+
 public interface RegistrationService {
+
+    public List<RegistrationOrgUserDTO> getOrganizationUsers();
+
     public void registerOrgUser(RegistrationOrgUserDTO orgUserDTO) throws Exception;
 
     public void registerStudent(RegistrationStudentDTO studentDTO) throws Exception;

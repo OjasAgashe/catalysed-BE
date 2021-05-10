@@ -2,6 +2,7 @@ package com.ojas.gcp.firstappenginetryout.service.impl;
 
 import com.ojas.gcp.firstappenginetryout.entity.AppUser;
 import com.ojas.gcp.firstappenginetryout.entity.Mentor;
+import com.ojas.gcp.firstappenginetryout.entity.Organization;
 import com.ojas.gcp.firstappenginetryout.entity.OrganizationUser;
 import com.ojas.gcp.firstappenginetryout.entity.Student;
 import com.ojas.gcp.firstappenginetryout.entity.User;
@@ -13,15 +14,19 @@ import com.ojas.gcp.firstappenginetryout.repository.OrganizationUserRepository;
 import com.ojas.gcp.firstappenginetryout.repository.StudentRepository;
 import com.ojas.gcp.firstappenginetryout.repository.UserRepository;
 import com.ojas.gcp.firstappenginetryout.rest.dto.RegistrationMentorDTO;
+import com.ojas.gcp.firstappenginetryout.rest.dto.RegistrationOrgDetailsDTO;
 import com.ojas.gcp.firstappenginetryout.rest.dto.RegistrationOrgUserDTO;
 import com.ojas.gcp.firstappenginetryout.rest.dto.RegistrationStudentDTO;
 import com.ojas.gcp.firstappenginetryout.rest.dto.RegistrationUserDTO;
+import com.ojas.gcp.firstappenginetryout.rest.dto.SocialMediaDTO;
 import com.ojas.gcp.firstappenginetryout.rest.dto.UserDTO;
 import com.ojas.gcp.firstappenginetryout.service.RegistrationService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class RegistrationServiceImpl implements RegistrationService {
@@ -47,6 +52,31 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
+    public List<RegistrationOrgUserDTO> getOrganizationUsers() {
+        return convert(orgUserRepository.findAll());
+    }
+
+    private List<RegistrationOrgUserDTO> convert(List<OrganizationUser> orgUsers) {
+        return orgUsers.stream()
+                .map(orgUser -> new RegistrationOrgUserDTO(
+                        orgUser.getEmail(),
+                        "",
+                        orgUser.getFirstName(),
+                        orgUser.getLastName(),
+                        new RegistrationOrgDetailsDTO(
+                                orgUser.getOrganization().getName(),
+                                orgUser.getOrganization().getDescription(),
+                                orgUser.getOrganization().getWebsite(),
+                                new SocialMediaDTO(
+                                        orgUser.getOrganization().getSocialMediaCode(),
+                                        orgUser.getOrganization().getSocialMediaLink()
+                                )
+                        )
+                ))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public void registerOrgUser(RegistrationOrgUserDTO orgUserDTO) throws Exception {
         //check if user already present
         if (orgUserRepository.findByEmail(orgUserDTO.getEmail()).isPresent()) {
@@ -59,7 +89,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             2. Valid password
         */
         orgUserRepository.saveAndFlush(getUser(orgUserDTO));
-        emailService.sendMemeMessage("ojasagashea74@gmail.com", "Welcome mail");
+//        emailService.sendMemeMessage("ojasagashea74@gmail.com", "Welcome mail");
         //generate Activation mail
     }
 
@@ -69,7 +99,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new DuplicateResourceException("User already registered in system - Please Login");
         }
         studentRepository.saveAndFlush(getUser(studentDTO));
-        emailService.sendMemeMessage("ojasagashea74@gmail.com", "Welcome mail");
+//        emailService.sendMemeMessage("ojasagashea74@gmail.com", "Welcome mail");
     }
 
     @Override
@@ -78,7 +108,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new DuplicateResourceException("User already registered in system - Please Login");
         }
         mentorRepository.saveAndFlush(getUser(mentorDTO));
-        emailService.sendMemeMessage("ojasagashea74@gmail.com", "Welcome mail");
+//        emailService.sendMemeMessage("ojasagashea74@gmail.com", "Welcome mail");
     }
 
     @Override
@@ -117,7 +147,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         OrganizationUser user = new OrganizationUser();
         setUserBaseDetails(user, userDTO);
         user.setType(UserType.ORGANIZATION_USER);
-        user.setPhoneNumber(userDTO.getPhoneNumber());
+        Organization organization = getOrganization(userDTO.getOrgDetails());
+        organization.setOrganizationUser(user);
+        user.setOrganization(organization);
 //        user.setAccountActivated(true);
         return user;
     }
@@ -126,7 +158,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         Student user = new Student();
         setUserBaseDetails(user, userDTO);
         user.setType(UserType.STUDENT);
-        user.setSchool("VVS");
+//        user.setSchool("VVS");
         return user;
     }
 
@@ -134,8 +166,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         Mentor user = new Mentor( );
         setUserBaseDetails(user, userDTO);
         user.setType(UserType.MENTOR);
-        user.setLocation(userDTO.getLocation());
-        user.setGender(userDTO.getGender());
+//        user.setLocation(userDTO.getLocation());
+//        user.setGender(userDTO.getGender());
         return user;
     }
 
@@ -147,7 +179,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         user.setUserName(userDTO.getUserName());
         user.setFirstName(userDTO.getFirstName());
         user.setFirstName(userDTO.getLastName());
-        user.setActive(true);
+//        user.setActive(true);
         return user;
     }
 
@@ -158,5 +190,14 @@ public class RegistrationServiceImpl implements RegistrationService {
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
         user.setAccountActivated(false);
+    }
+
+    private Organization getOrganization(RegistrationOrgDetailsDTO organizationDetailsDTO) {
+        return new Organization(
+                organizationDetailsDTO.getName(),
+                organizationDetailsDTO.getDescription(),
+                organizationDetailsDTO.getOrgWebsite(),
+                organizationDetailsDTO.getSocialMedia().getCode(),
+                organizationDetailsDTO.getSocialMedia().getLink());
     }
 }

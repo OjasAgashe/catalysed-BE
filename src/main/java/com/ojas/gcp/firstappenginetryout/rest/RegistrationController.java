@@ -72,6 +72,12 @@ public class RegistrationController {
         return ResponseEntity.ok("Password changed Successfully");
     }
 
+    //temporary API for development - remove once done
+    @GetMapping(value = "temp/orgUsers")
+    public ResponseEntity<Object> getRegisteredOrgUsers() throws Exception {
+        return ResponseEntity.ok(registrationService.getOrganizationUsers());
+    }
+
     @GetMapping(value = "sendSimpleMail")
     public void sendWelcomeMail() {
         emailService.sendSimpleMessage("ojasagashea74@gmail.com", "Welcome mail", "Welcome Text");

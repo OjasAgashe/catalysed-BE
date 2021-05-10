@@ -6,6 +6,7 @@ public class OrganizationDetailsDTO {
     private String description;
     private String orgLogo;
     private String website;
+    private String socialMediaCode;
     private String socialMediaLink;
     private boolean isVerified;
     private String subscription;
@@ -15,13 +16,14 @@ public class OrganizationDetailsDTO {
     }
 
     public OrganizationDetailsDTO(Long id, String name, String description, String orgLogo, String website,
-                                  String socialMediaLink, boolean isVerified, String subscription) {
+                                  String socialMediaLink, String socialMediaCode, boolean isVerified, String subscription) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.orgLogo = orgLogo;
         this.website = website;
         this.socialMediaLink = socialMediaLink;
+        this.socialMediaCode = socialMediaCode;
         this.isVerified = isVerified;
         this.subscription = subscription;
     }
@@ -72,6 +74,14 @@ public class OrganizationDetailsDTO {
 
     public void setSocialMediaLink(String socialMediaLink) {
         this.socialMediaLink = socialMediaLink;
+    }
+
+    public String getSocialMediaCode() {
+        return socialMediaCode;
+    }
+
+    public void setSocialMediaCode(String socialMediaCode) {
+        this.socialMediaCode = socialMediaCode;
     }
 
     public boolean isVerified() {
