@@ -1,4 +1,4 @@
-package com.ojas.gcp.firstappenginetryout.rest.dto;
+package com.ojas.gcp.firstappenginetryout.rest.dto.registration;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;

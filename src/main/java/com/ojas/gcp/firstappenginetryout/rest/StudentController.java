@@ -1,6 +1,6 @@
 package com.ojas.gcp.firstappenginetryout.rest;
 
-import com.ojas.gcp.firstappenginetryout.rest.dto.StudentDTO;
+import com.ojas.gcp.firstappenginetryout.rest.dto.profile.StudentDTO;
 import com.ojas.gcp.firstappenginetryout.service.StudentService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;

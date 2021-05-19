@@ -1,4 +1,4 @@
-package com.ojas.gcp.firstappenginetryout.rest.dto;
+package com.ojas.gcp.firstappenginetryout.rest.dto.registration;
 
 public class RegistrationOrgUserDTO extends RegistrationUserDTO {
     private RegistrationOrgDetailsDTO orgDetails;

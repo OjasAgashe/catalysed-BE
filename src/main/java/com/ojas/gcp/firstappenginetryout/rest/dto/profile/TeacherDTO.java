@@ -1,4 +1,4 @@
-package com.ojas.gcp.firstappenginetryout.rest.dto;
+package com.ojas.gcp.firstappenginetryout.rest.dto.profile;
 
 public class TeacherDTO extends UserDTO{
     public TeacherDTO() {}

@@ -1,4 +1,6 @@
-package com.ojas.gcp.firstappenginetryout.rest.dto;
+package com.ojas.gcp.firstappenginetryout.rest.dto.profile;
+
+import com.ojas.gcp.firstappenginetryout.rest.dto.PersonDTO;
 
 import java.util.List;
 

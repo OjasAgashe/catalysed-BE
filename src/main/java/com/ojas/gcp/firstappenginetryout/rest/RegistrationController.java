@@ -2,7 +2,10 @@ package com.ojas.gcp.firstappenginetryout.rest;
 
 import com.ojas.gcp.firstappenginetryout.auth.SessionUser;
 import com.ojas.gcp.firstappenginetryout.entity.Mentor;
-import com.ojas.gcp.firstappenginetryout.rest.dto.*;
+import com.ojas.gcp.firstappenginetryout.rest.dto.profile.UserDTO;
+import com.ojas.gcp.firstappenginetryout.rest.dto.registration.RegistrationMentorDTO;
+import com.ojas.gcp.firstappenginetryout.rest.dto.registration.RegistrationOrgUserDTO;
+import com.ojas.gcp.firstappenginetryout.rest.dto.registration.RegistrationStudentDTO;
 import com.ojas.gcp.firstappenginetryout.service.impl.EmailServiceImpl;
 import com.ojas.gcp.firstappenginetryout.service.MentorService;
 import com.ojas.gcp.firstappenginetryout.service.RegistrationService;

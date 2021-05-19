@@ -1,4 +1,6 @@
-package com.ojas.gcp.firstappenginetryout.rest.dto;
+package com.ojas.gcp.firstappenginetryout.rest.dto.registration;
+
+import com.ojas.gcp.firstappenginetryout.rest.dto.SocialMediaDTO;
 
 public class RegistrationOrgDetailsDTO {
 

@@ -1,4 +1,4 @@
-package com.ojas.gcp.firstappenginetryout.rest.dto;
+package com.ojas.gcp.firstappenginetryout.rest.dto.profile;
 
 import com.ojas.gcp.firstappenginetryout.entity.enums.UserType;
 

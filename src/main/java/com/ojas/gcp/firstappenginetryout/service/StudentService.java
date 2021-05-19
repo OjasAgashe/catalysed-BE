@@ -1,6 +1,6 @@
 package com.ojas.gcp.firstappenginetryout.service;
 
-import com.ojas.gcp.firstappenginetryout.rest.dto.StudentDTO;
+import com.ojas.gcp.firstappenginetryout.rest.dto.profile.StudentDTO;
 import java.util.List;
 
 public interface StudentService {

@@ -124,4 +124,42 @@
             <column name="instructions" type="TEXT"/>
         </createTable>
     </changeSet>
+
+    <changeSet id="4" author="ojas.v.agashe@gmail.com">
+        <comment>Creating Profile related tables</comment>
+        <createTable tableName="org_profile">
+            <column name="id" type="BIGINT" >
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="work_description" type="TEXT"/>
+            <column name="location_country" type="varchar(50)"/>
+            <column name="location_region" type="varchar(50)"/>
+            <column name="contact_email" type="varchar(25)"/>
+            <column name="contact_phone_country" type="varchar(50)"/>
+            <column name="contact_phone_number" type="varchar(50)"/>
+            <column name="primary_language" type="varchar(25)"/>
+            <column name="inception_year" type="varchar(10)"/>
+        </createTable>
+
+        <createTable tableName="user_profile">
+            <column name="id" type="BIGINT" >
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="user_type" type="varchar(25)"/>
+            <column name="birth_year" type="varchar(10)"/>
+            <column name="organization" type="varchar(50)"/>
+            <column name="primary_language" type="varchar(25)"/>
+            <column name="gender" type="varchar(30)"/>
+            <column name="stable_connection" type="BOOLEAN" defaultValueBoolean="false"/>
+            <column name="mentor_qualification" type="varchar(250)"/>
+            <column name="mentor_profession" type="varchar(250)"/>
+            <column name="previously_mentored" type="BOOLEAN" defaultValueBoolean="false"/>
+            <column name="primary_device" type="varchar(30)"/>
+            <column name="location_country" type="varchar(50)"/>
+            <column name="location_region" type="varchar(50)"/>
+            <column name="contact_email" type="varchar(25)"/>
+            <column name="contact_phone_country" type="varchar(50)"/>
+            <column name="contact_phone_number" type="varchar(50)"/>
+        </createTable>
+    </changeSet>
 </databaseChangeLog>

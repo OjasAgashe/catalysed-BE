@@ -1,9 +1,9 @@
 package com.ojas.gcp.firstappenginetryout.service;
 
-import com.ojas.gcp.firstappenginetryout.rest.dto.RegistrationMentorDTO;
-import com.ojas.gcp.firstappenginetryout.rest.dto.RegistrationOrgUserDTO;
-import com.ojas.gcp.firstappenginetryout.rest.dto.RegistrationStudentDTO;
-import com.ojas.gcp.firstappenginetryout.rest.dto.UserDTO;
+import com.ojas.gcp.firstappenginetryout.rest.dto.registration.RegistrationMentorDTO;
+import com.ojas.gcp.firstappenginetryout.rest.dto.registration.RegistrationOrgUserDTO;
+import com.ojas.gcp.firstappenginetryout.rest.dto.registration.RegistrationStudentDTO;
+import com.ojas.gcp.firstappenginetryout.rest.dto.profile.UserDTO;
 
 import java.util.List;
 

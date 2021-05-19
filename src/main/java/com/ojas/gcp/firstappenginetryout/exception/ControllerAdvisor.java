@@ -1,5 +1,6 @@
 package com.ojas.gcp.firstappenginetryout.exception;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -33,6 +35,12 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleBadCredentialsException(
             BadCredentialsException ex, WebRequest request) {
         return new ResponseEntity<>(getResponseBody("Invalid Username or Password", INVALID_CREDENTIALS.name()), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<Object> handleDataIntegrityViolationException(
+            DataIntegrityViolationException ex, WebRequest request) {
+        return new ResponseEntity<>(getResponseBody("Record for the entity already present. Duplicate not allowed", DUPLICATE_RESOURCE.name()), HttpStatus.CONFLICT);
     }
 
     private Map<String, Object> getResponseBody(String message, String errorCode) {

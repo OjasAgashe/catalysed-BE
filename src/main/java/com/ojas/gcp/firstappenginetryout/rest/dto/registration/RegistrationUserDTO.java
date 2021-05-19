@@ -1,4 +1,4 @@
-package com.ojas.gcp.firstappenginetryout.rest.dto;
+package com.ojas.gcp.firstappenginetryout.rest.dto.registration;
 
 public class RegistrationUserDTO {
     private String email;

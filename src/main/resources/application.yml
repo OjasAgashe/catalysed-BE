@@ -11,23 +11,25 @@ spring:
 profiles: dev
 message: "Hello, from dev!"
 ---
+
+server:
+  port: 5000
+
 spring:
   thymeleaf:
     prefix: classpath:/templates/mail/
-  cloud:
-    appId: level-abode-312509
-    gcp:
-      sql:
-        database-name: catalysed
-        instance-connection-name: level-abode-312509:asia-south1:catalysed-db
-#        first-spring-boot-tryout:us-central1:pathshala-tryout
   datasource:
     username: root
     password: password
-#    url: jdbc:mysql://localhost:3306/catalysed
+    url: jdbc:mysql://catalysed.c65okamx0dze.us-east-1.rds.amazonaws.com:3306/catalysed?useSSL=false
+    driver-class-name: com.mysql.jdbc.Driver
+
   jpa:
     hibernate:
       ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
   liquibase:
     change-log: classpath:changelog/index.xml
 #  security:
