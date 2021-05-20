@@ -10,13 +10,15 @@ public class ProfileBuilderMentorDTO extends ProfileBuilderBaseDTO{
     private String qualification;
     private String profession;
     private boolean stableConnection;
+    private boolean previouslyMentored;
 
     public ProfileBuilderMentorDTO() {
         super();
     }
 
     public ProfileBuilderMentorDTO(ContactDetailsDTO contactDetails, String primaryLanguage, LocationDTO location, String birthYear,
-                                   String organization, String gender, String qualification, String profession, boolean stableConnection) {
+                                   String organization, String gender, String qualification, String profession,
+                                   boolean previouslyMentored, boolean stableConnection) {
         super(contactDetails, primaryLanguage, location);
         this.birthYear = birthYear;
         this.organization = organization;
@@ -24,6 +26,7 @@ public class ProfileBuilderMentorDTO extends ProfileBuilderBaseDTO{
         this.qualification = qualification;
         this.profession = profession;
         this.stableConnection = stableConnection;
+        this.previouslyMentored = previouslyMentored;
     }
 
     public String getBirthYear() {
@@ -64,6 +67,14 @@ public class ProfileBuilderMentorDTO extends ProfileBuilderBaseDTO{
 
     public void setProfession(String profession) {
         this.profession = profession;
+    }
+
+    public boolean isPreviouslyMentored() {
+        return previouslyMentored;
+    }
+
+    public void setPreviouslyMentored(boolean previouslyMentored) {
+        this.previouslyMentored = previouslyMentored;
     }
 
     public boolean isStableConnection() {

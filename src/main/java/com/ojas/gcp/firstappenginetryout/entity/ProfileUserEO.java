@@ -26,8 +26,10 @@ public class ProfileUserEO {
     private String locationRegion;
     @Column(name = "contact_email")
     private String contactEmail;
-    @Column(name = "contact_phone_country")
-    private String contactPhoneCountry;
+    @Column(name = "contact_phone_country_name")
+    private String contactPhoneCountryName;
+    @Column(name = "contact_phone_country_code")
+    private String contactPhoneCountryCode;
     @Column(name = "contact_phone_number")
     private String contactPhoneNumber;
     @Column(name = "gender")
@@ -40,8 +42,10 @@ public class ProfileUserEO {
     private String mentorQualification;
     @Column(name = "mentor_profession")
     private String mentorProfession;
-    @Column(name = "previously_mentored")
-    private boolean previouslyMentored;
+    @Column(name = "mentor_previously_mentored")
+    private boolean mentorPreviouslyMentored;
+    @Column(name = "student_previously_mentored")
+    private boolean StudentPreviouslyMentored;
     @Column(name = "primary_device")
     private String primaryDevice;
 
@@ -109,12 +113,20 @@ public class ProfileUserEO {
         this.contactEmail = contactEmail;
     }
 
-    public String getContactPhoneCountry() {
-        return contactPhoneCountry;
+    public String getContactPhoneCountryName() {
+        return contactPhoneCountryName;
     }
 
-    public void setContactPhoneCountry(String contactPhoneCountry) {
-        this.contactPhoneCountry = contactPhoneCountry;
+    public void setContactPhoneCountryName(String contactPhoneCountryName) {
+        this.contactPhoneCountryName = contactPhoneCountryName;
+    }
+
+    public String getContactPhoneCountryCode() {
+        return contactPhoneCountryCode;
+    }
+
+    public void setContactPhoneCountryCode(String contactPhoneCountryCode) {
+        this.contactPhoneCountryCode = contactPhoneCountryCode;
     }
 
     public String getContactPhoneNumber() {
@@ -165,12 +177,20 @@ public class ProfileUserEO {
         this.mentorProfession = mentorProfession;
     }
 
-    public boolean isPreviouslyMentored() {
-        return previouslyMentored;
+    public boolean isMentorPreviouslyMentored() {
+        return mentorPreviouslyMentored;
     }
 
-    public void setPreviouslyMentored(boolean previouslyMentored) {
-        this.previouslyMentored = previouslyMentored;
+    public void setMentorPreviouslyMentored(boolean mentorPreviouslyMentored) {
+        this.mentorPreviouslyMentored = mentorPreviouslyMentored;
+    }
+
+    public boolean isStudentPreviouslyMentored() {
+        return StudentPreviouslyMentored;
+    }
+
+    public void setStudentPreviouslyMentored(boolean studentPreviouslyMentored) {
+        StudentPreviouslyMentored = studentPreviouslyMentored;
     }
 
     public String getPrimaryDevice() {

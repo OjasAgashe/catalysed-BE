@@ -17,8 +17,10 @@ public class ProfileOrgEO {
     private String locationRegion;
     @Column(name = "contact_email")
     private String contactEmail;
-    @Column(name = "contact_phone_country")
-    private String contactPhoneCountry;
+    @Column(name = "contact_phone_country_name")
+    private String contactPhoneCountryName;
+    @Column(name = "contact_phone_country_code")
+    private String contactPhoneCountryCode;
     @Column(name = "contact_phone_number")
     private String contactPhoneNumber;
     @Column(name = "primary_language")
@@ -68,12 +70,20 @@ public class ProfileOrgEO {
         this.contactEmail = contactEmail;
     }
 
-    public String getContactPhoneCountry() {
-        return contactPhoneCountry;
+    public String getContactPhoneCountryName() {
+        return contactPhoneCountryName;
     }
 
-    public void setContactPhoneCountry(String contactPhoneCountry) {
-        this.contactPhoneCountry = contactPhoneCountry;
+    public void setContactPhoneCountryName(String contactPhoneCountryName) {
+        this.contactPhoneCountryName = contactPhoneCountryName;
+    }
+
+    public String getContactPhoneCountryCode() {
+        return contactPhoneCountryCode;
+    }
+
+    public void setContactPhoneCountryCode(String contactPhoneCountryCode) {
+        this.contactPhoneCountryCode = contactPhoneCountryCode;
     }
 
     public String getContactPhoneNumber() {

@@ -158,7 +158,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         Student user = new Student();
         setUserBaseDetails(user, userDTO);
         user.setType(UserType.STUDENT);
-//        user.setSchool("VVS");
+        user.setSchool(userDTO.getSchool());
         return user;
     }
 
@@ -166,8 +166,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         Mentor user = new Mentor( );
         setUserBaseDetails(user, userDTO);
         user.setType(UserType.MENTOR);
-//        user.setLocation(userDTO.getLocation());
-//        user.setGender(userDTO.getGender());
+        user.setLocation(userDTO.getLocation());
+        user.setGender(userDTO.getGender());
         return user;
     }
 

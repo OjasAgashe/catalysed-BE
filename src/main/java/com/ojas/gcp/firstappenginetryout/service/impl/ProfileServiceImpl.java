@@ -79,7 +79,7 @@ public class ProfileServiceImpl implements ProfileService {
         return new ProfileBuilderOrgDTO(
                 new ContactDetailsDTO(
                         profileOrgEO.getContactEmail(),
-                        new PhoneDTO(profileOrgEO.getContactPhoneCountry(), profileOrgEO.getContactPhoneNumber())
+                        new PhoneDTO(profileOrgEO.getContactPhoneCountryName(), profileOrgEO.getContactPhoneCountryCode(), profileOrgEO.getContactPhoneNumber())
                 ),
                 new LocationDTO(profileOrgEO.getLocationCountry(), profileOrgEO.getLocationRegion()),
                 profileOrgEO.getPrimaryLanguage(),
@@ -92,7 +92,7 @@ public class ProfileServiceImpl implements ProfileService {
         return new ProfileBuilderMentorDTO(
                 new ContactDetailsDTO(
                         profileUserEO.getContactEmail(),
-                        new PhoneDTO(profileUserEO.getContactPhoneCountry(), profileUserEO.getContactPhoneNumber())
+                        new PhoneDTO(profileUserEO.getContactPhoneCountryName(), profileUserEO.getContactPhoneCountryCode(), profileUserEO.getContactPhoneNumber())
                 ),
                 profileUserEO.getPrimaryLanguage(),
                 new LocationDTO(profileUserEO.getLocationCountry(), profileUserEO.getLocationRegion()),
@@ -101,6 +101,7 @@ public class ProfileServiceImpl implements ProfileService {
                 profileUserEO.getGender(),
                 profileUserEO.getMentorQualification(),
                 profileUserEO.getMentorProfession(),
+                profileUserEO.isMentorPreviouslyMentored(),
                 profileUserEO.isStableConnection()
         );
     }
@@ -109,7 +110,7 @@ public class ProfileServiceImpl implements ProfileService {
         return new ProfileBuilderStudentDTO(
                 new ContactDetailsDTO(
                         profileUserEO.getContactEmail(),
-                        new PhoneDTO(profileUserEO.getContactPhoneCountry(), profileUserEO.getContactPhoneNumber())
+                        new PhoneDTO(profileUserEO.getContactPhoneCountryName(), profileUserEO.getContactPhoneCountryCode(), profileUserEO.getContactPhoneNumber())
                 ),
                 new LocationDTO(profileUserEO.getLocationCountry(), profileUserEO.getLocationRegion()),
                 profileUserEO.getPrimaryLanguage(),
@@ -118,7 +119,7 @@ public class ProfileServiceImpl implements ProfileService {
                 profileUserEO.getGender(),
                 profileUserEO.isStableConnection(),
                 profileUserEO.getPrimaryDevice(),
-                profileUserEO.isPreviouslyMentored()
+                profileUserEO.isStudentPreviouslyMentored()
         );
     }
 
@@ -128,7 +129,8 @@ public class ProfileServiceImpl implements ProfileService {
         orgEO.setOrganization(orgUser.getOrganization());
         orgEO.setWorkDescription(orgDTO.getWorkDescription());
         orgEO.setContactEmail(orgDTO.getContactDetails().getEmail());
-        orgEO.setContactPhoneCountry(orgDTO.getContactDetails().getPhone().getCountryCode());
+        orgEO.setContactPhoneCountryName(orgDTO.getContactDetails().getPhone().getCountryName());
+        orgEO.setContactPhoneCountryCode(orgDTO.getContactDetails().getPhone().getCountryCode());
         orgEO.setContactPhoneNumber(orgDTO.getContactDetails().getPhone().getNumber());
         orgEO.setLocationCountry(orgDTO.getLocation().getCountry());
         orgEO.setLocationRegion(orgDTO.getLocation().getRegion());
@@ -142,7 +144,8 @@ public class ProfileServiceImpl implements ProfileService {
         userEO.setUser(user);
         userEO.setUserType(UserType.MENTOR);
         userEO.setContactEmail(mentorDTO.getContactDetails().getEmail());
-        userEO.setContactPhoneCountry(mentorDTO.getContactDetails().getPhone().getCountryCode());
+        userEO.setContactPhoneCountryName(mentorDTO.getContactDetails().getPhone().getCountryName());
+        userEO.setContactPhoneCountryCode(mentorDTO.getContactDetails().getPhone().getCountryCode());
         userEO.setContactPhoneNumber(mentorDTO.getContactDetails().getPhone().getNumber());
         userEO.setLocationCountry(mentorDTO.getLocation().getCountry());
         userEO.setLocationRegion(mentorDTO.getLocation().getRegion());
@@ -152,6 +155,7 @@ public class ProfileServiceImpl implements ProfileService {
         userEO.setPrimaryLanguage(mentorDTO.getPrimaryLanguage());
         userEO.setMentorQualification(mentorDTO.getQualification());
         userEO.setMentorProfession(mentorDTO.getProfession());
+        userEO.setMentorPreviouslyMentored(mentorDTO.isPreviouslyMentored());
         userEO.setStableConnection(mentorDTO.isStableConnection());
         profileUserRepository.saveAndFlush(userEO);
     }
@@ -161,7 +165,8 @@ public class ProfileServiceImpl implements ProfileService {
         userEO.setUser(user);
         userEO.setUserType(UserType.STUDENT);
         userEO.setContactEmail(studentDTO.getContactDetails().getEmail());
-        userEO.setContactPhoneCountry(studentDTO.getContactDetails().getPhone().getCountryCode());
+        userEO.setContactPhoneCountryName(studentDTO.getContactDetails().getPhone().getCountryName());
+        userEO.setContactPhoneCountryCode(studentDTO.getContactDetails().getPhone().getCountryCode());
         userEO.setContactPhoneNumber(studentDTO.getContactDetails().getPhone().getNumber());
         userEO.setLocationCountry(studentDTO.getLocation().getCountry());
         userEO.setLocationRegion(studentDTO.getLocation().getRegion());
@@ -169,7 +174,7 @@ public class ProfileServiceImpl implements ProfileService {
         userEO.setOrganization(studentDTO.getOrganization());
         userEO.setGender(studentDTO.getGender());
         userEO.setPrimaryLanguage(studentDTO.getPrimaryLanguage());
-        userEO.setPreviouslyMentored(studentDTO.isPreviouslyMentored());
+        userEO.setStudentPreviouslyMentored(studentDTO.isPreviouslyMentored());
         userEO.setPrimaryDevice(studentDTO.getPrimaryDevice());
         userEO.setStableConnection(studentDTO.isStableConnection());
         profileUserRepository.saveAndFlush(userEO);
