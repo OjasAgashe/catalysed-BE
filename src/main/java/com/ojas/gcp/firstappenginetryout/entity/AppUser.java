@@ -34,20 +34,25 @@ public abstract class AppUser {
     private UserType type;
     @Column(name = "account_activated")
     private boolean accountActivated;
-
+    @Column(name = "account_verified")
+    private boolean accountVerified;
+    @Column(name = "profile_created")
+    private boolean profileCreated;
 
     protected AppUser() {
 
     }
 
     public AppUser(String email, String password, String firstName, String lastName, UserType type,
-                   boolean accountActivated) {
+                   boolean accountActivated, boolean accountVerified, boolean profileCreated) {
         this.email = email;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.type = type;
         this.accountActivated = accountActivated;
+        this.accountVerified = accountVerified;
+        this.profileCreated = profileCreated;
     }
 
     public Long getId() {
@@ -104,5 +109,21 @@ public abstract class AppUser {
 
     public void setAccountActivated(boolean accountActivated) {
         this.accountActivated = accountActivated;
+    }
+
+    public boolean isAccountVerified() {
+        return accountVerified;
+    }
+
+    public void setAccountVerified(boolean accountVerified) {
+        this.accountVerified = accountVerified;
+    }
+
+    public boolean isProfileCreated() {
+        return profileCreated;
+    }
+
+    public void setProfileCreated(boolean profileCreated) {
+        this.profileCreated = profileCreated;
     }
 }

@@ -7,10 +7,8 @@ import com.ojas.gcp.firstappenginetryout.auth.SessionUser;
 import com.ojas.gcp.firstappenginetryout.rest.dto.AuthenticationUserDTO;
 import com.ojas.gcp.firstappenginetryout.security.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,10 +29,8 @@ public class LoginController {
     @PostMapping
     public ResponseEntity<?> authenticateAppUser(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
 //        try {
-        System.out.println("Auth starting  ......." + authenticationRequest.getEmail() + "......." + authenticationRequest.getPassword());
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword()));
-        System.out.println("Auth done properly .......");
 
 //        } catch (BadCredentialsException ex) {
 //            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect email or password");
@@ -48,7 +44,13 @@ public class LoginController {
     }
 
     private AuthenticationUserDTO generateAuthUserDTO(SessionUser sessionUser) {
-        return new AuthenticationUserDTO(sessionUser.getId(), sessionUser.getEmailId(), sessionUser.getUsername(),
-                sessionUser.isEnabled(), sessionUser.getUserType());
+        return new AuthenticationUserDTO(
+                sessionUser.getId(),
+                sessionUser.getEmailId(),
+                sessionUser.getUsername(),
+                sessionUser.isEnabled(),
+                sessionUser.getUserType(),
+                sessionUser.isAccountVerified(),
+                sessionUser.isProfileCreated());
     }
 }

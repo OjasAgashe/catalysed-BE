@@ -165,4 +165,15 @@
             <column name="contact_phone_number" type="varchar(50)"/>
         </createTable>
     </changeSet>
+
+    <changeSet id="5" author="ojas.v.agashe@gmail.com">
+        <comment>Adding fields to app_users and user_profile tables</comment>
+        <addColumn tableName="app_users">
+            <column name="account_verified" type="BOOLEAN" defaultValueBoolean="false"></column>
+            <column name="profile_created" type="BOOLEAN" defaultValueBoolean="false"></column>
+        </addColumn>
+        <addColumn tableName="user_profile">
+            <column name="mentor_experience_in_years" type="SMALLINT"></column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

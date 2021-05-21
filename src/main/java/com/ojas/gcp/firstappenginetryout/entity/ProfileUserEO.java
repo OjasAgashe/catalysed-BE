@@ -44,6 +44,8 @@ public class ProfileUserEO {
     private String mentorProfession;
     @Column(name = "mentor_previously_mentored")
     private boolean mentorPreviouslyMentored;
+    @Column(name = "mentor_experience_in_years")
+    private int mentorExperience;
     @Column(name = "student_previously_mentored")
     private boolean StudentPreviouslyMentored;
     @Column(name = "primary_device")
@@ -183,6 +185,14 @@ public class ProfileUserEO {
 
     public void setMentorPreviouslyMentored(boolean mentorPreviouslyMentored) {
         this.mentorPreviouslyMentored = mentorPreviouslyMentored;
+    }
+
+    public int getMentorExperience() {
+        return mentorExperience;
+    }
+
+    public void setMentorExperience(int mentorExperience) {
+        this.mentorExperience = mentorExperience;
     }
 
     public boolean isStudentPreviouslyMentored() {

@@ -42,18 +42,24 @@ public class ProfileServiceImpl implements ProfileService {
     public void setProfile(SessionUser user, ProfileBuilderOrgDTO orgProfileDTO) {
         AppUser appUser = appUserRepository.findById(user.getId()).get();
         setProfileEO(appUser, orgProfileDTO);
+        appUser.setProfileCreated(true);
+        appUserRepository.saveAndFlush(appUser);
     }
 
     @Override
     public void setProfile(SessionUser user, ProfileBuilderMentorDTO mentorProfileDTO) {
         AppUser appUser = appUserRepository.findById(user.getId()).get();
         setProfileEO(appUser, mentorProfileDTO);
+        appUser.setProfileCreated(true);
+        appUserRepository.saveAndFlush(appUser);
     }
 
     @Override
     public void setProfile(SessionUser user, ProfileBuilderStudentDTO studentProfileDTO) {
         AppUser appUser = appUserRepository.findById(user.getId()).get();
         setProfileEO(appUser, studentProfileDTO);
+        appUser.setProfileCreated(true);
+        appUserRepository.saveAndFlush(appUser);
     }
 
     @Override
@@ -102,7 +108,8 @@ public class ProfileServiceImpl implements ProfileService {
                 profileUserEO.getMentorQualification(),
                 profileUserEO.getMentorProfession(),
                 profileUserEO.isMentorPreviouslyMentored(),
-                profileUserEO.isStableConnection()
+                profileUserEO.isStableConnection(),
+                profileUserEO.getMentorExperience()
         );
     }
 
@@ -157,6 +164,7 @@ public class ProfileServiceImpl implements ProfileService {
         userEO.setMentorProfession(mentorDTO.getProfession());
         userEO.setMentorPreviouslyMentored(mentorDTO.isPreviouslyMentored());
         userEO.setStableConnection(mentorDTO.isStableConnection());
+        userEO.setMentorExperience(mentorDTO.getExperience());
         profileUserRepository.saveAndFlush(userEO);
     }
 

@@ -90,4 +90,12 @@ public class SessionUser implements UserDetails {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public boolean isAccountVerified() {
+        return user.isAccountVerified();
+    }
+
+    public boolean isProfileCreated() {
+        return user.isProfileCreated();
+    }
 }

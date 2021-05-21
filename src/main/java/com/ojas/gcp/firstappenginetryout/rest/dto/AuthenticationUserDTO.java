@@ -10,17 +10,21 @@ public class AuthenticationUserDTO {
 //    private String roles;
     private boolean isActive;
     private UserType userType;
+    private boolean accountVerified;
+    private boolean profileCreated;
 
     public AuthenticationUserDTO() {
     }
 
-    public AuthenticationUserDTO(Long id, String email, String userName,
-                                 boolean isActive, UserType userType) {
+    public AuthenticationUserDTO(Long id, String email, String userName, boolean isActive,
+                                 UserType userType, boolean accountVerified, boolean profileCreated) {
         this.id = id;
         this.email = email;
         this.userName = userName;
         this.isActive = isActive;
         this.userType = userType;
+        this.accountVerified = accountVerified;
+        this.profileCreated = profileCreated;
     }
 
     public Long getId() {
@@ -61,5 +65,21 @@ public class AuthenticationUserDTO {
 
     public void setUserType(UserType userType) {
         this.userType = userType;
+    }
+
+    public boolean isAccountVerified() {
+        return accountVerified;
+    }
+
+    public void setAccountVerified(boolean accountVerified) {
+        this.accountVerified = accountVerified;
+    }
+
+    public boolean isProfileCreated() {
+        return profileCreated;
+    }
+
+    public void setProfileCreated(boolean profileCreated) {
+        this.profileCreated = profileCreated;
     }
 }
