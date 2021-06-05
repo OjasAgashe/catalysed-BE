@@ -176,4 +176,47 @@
             <column name="mentor_experience_in_years" type="SMALLINT"></column>
         </addColumn>
     </changeSet>
+
+    <changeSet id="6" author="ojas.v.agashe@gmail.com">
+        <comment>Adding org field in program tables</comment>
+        <addColumn tableName="programs">
+            <column name="org_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_program_organization" references="organizations(id)"/>
+            </column>
+            <column name="status" type="varchar(30)"/>
+            <column name="coordinator_phone_country_name" type="varchar(50)"/>
+        </addColumn>
+            <renameColumn tableName="programs" columnDataType ="varchar(10)" oldColumnName="coordinator_phone_extension" newColumnName="coordinator_phone_country_code"/>
+    </changeSet>
+
+    <changeSet id="7" author="ojas.v.agashe@gmail.com">
+        <comment>Adding program invitation tables</comment>
+        <createTable tableName="program_invitations">
+            <column name="id" type="BIGINT" >
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="program_id" type="BIGINT" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="invitation_details_id" type="BIGINT" >
+                <constraints nullable="false" foreignKeyName="fk_program_invitation_details_fields" references="program_invitation_details(id)"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints foreignKeyName="fk_user_program_invitation_users_fields" references="app_users(id)"/>
+            </column>
+            <column name="name" type="varchar(25)"/>
+            <column name="email_id" type="varchar(25)"/>
+            <column name="user_type" type="varchar(10)"/>
+            <column name="sent_at" type="varchar(50)"/>
+            <column name="response_status" type="varchar(10)"/>
+        </createTable>
+        <createTable tableName="program_invitation_details">
+            <column name="id" type="BIGINT" >
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="subject" type="varchar(250)"/>
+            <column name="message" type="TEXT"/>
+        </createTable>
+    </changeSet>
+
 </databaseChangeLog>

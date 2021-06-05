@@ -1,5 +1,7 @@
 package com.ojas.gcp.firstappenginetryout.rest.dto;
 
+import com.ojas.gcp.firstappenginetryout.entity.enums.ProgramStatus;
+
 public class ProgramOrgMetaDTO {
     private Long id;
     private String title;
@@ -7,18 +9,20 @@ public class ProgramOrgMetaDTO {
     private int durationInMonths;
     private String mode;
     private String languageRequirements;
+    private ProgramStatus status;
 
     public ProgramOrgMetaDTO() {
     }
 
     public ProgramOrgMetaDTO(Long id, String title, String tentativeStartDate, int durationInMonths,
-                             String mode, String languageRequirements) {
+                             String mode, String languageRequirements, ProgramStatus status) {
         this.id = id;
         this.title = title;
         this.tentativeStartDate = tentativeStartDate;
         this.durationInMonths = durationInMonths;
         this.mode = mode;
         this.languageRequirements = languageRequirements;
+        this.status = status;
     }
 
     public Long getId() {
@@ -67,5 +71,13 @@ public class ProgramOrgMetaDTO {
 
     public void setLanguageRequirements(String languageRequirements) {
         this.languageRequirements = languageRequirements;
+    }
+
+    public ProgramStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ProgramStatus status) {
+        this.status = status;
     }
 }

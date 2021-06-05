@@ -1,14 +1,17 @@
 package com.ojas.gcp.firstappenginetryout.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.util.List;
 
 @Entity
 @Table(name = "organizations")
@@ -30,10 +33,12 @@ public class Organization {
     private boolean isVerified;
     @Column(name = "subscription")
     private String subscription;
-    @OneToOne()
+    @OneToOne
     @JoinColumn(name = "org_user_id")
     @JsonBackReference
     private OrganizationUser organizationUser;
+    @OneToMany(mappedBy = "organization")
+    private List<Program> programs;
 
 
     public Organization() {
@@ -49,7 +54,7 @@ public class Organization {
     }
 
     public Organization(String name, String description, String orgLogo, String website, String socialMediaCode,
-                        String socialMediaLink, boolean isVerified, String subscription) {
+                        String socialMediaLink, boolean isVerified, String subscription, List<Program> programs) {
         this.name = name;
         this.description = description;
         this.orgLogo = orgLogo;
@@ -58,6 +63,7 @@ public class Organization {
         this.socialMediaLink = socialMediaLink;
         this.isVerified = isVerified;
         this.subscription = subscription;
+        this.programs = programs;
     }
 
     public Long getId() {
@@ -142,5 +148,13 @@ public class Organization {
 
     public void setOrganizationUser(OrganizationUser organizationUser) {
         this.organizationUser = organizationUser;
+    }
+
+    public List<Program> getPrograms() {
+        return programs;
+    }
+
+    public void setPrograms(List<Program> programs) {
+        this.programs = programs;
     }
 }

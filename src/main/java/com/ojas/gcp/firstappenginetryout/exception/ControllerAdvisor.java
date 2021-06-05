@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.xml.bind.ValidationException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
@@ -29,6 +30,18 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleDuplicateResourceException(
             DuplicateResourceException ex, WebRequest request) {
         return new ResponseEntity<>(getResponseBody(ex.getMessage(), DUPLICATE_RESOURCE.name()), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<Object> handleResourceNotFoundException(
+            ResourceNotFoundException ex, WebRequest request) {
+        return new ResponseEntity<>(getResponseBody(ex.getMessage(), RESOURCE_NOT_FOUND.name()), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<Object> handleValidationException(
+            ValidationException ex, WebRequest request) {
+        return new ResponseEntity<>(getResponseBody(ex.getMessage(), VALIDATION_ERROR.name()), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(BadCredentialsException.class)

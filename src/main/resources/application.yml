@@ -20,7 +20,7 @@ spring:
     prefix: classpath:/templates/mail/
   datasource:
     username: root
-    password: password
+    password: AdiOjaSak
     url: jdbc:mysql://catalysed.c65okamx0dze.us-east-1.rds.amazonaws.com:3306/catalysed?useSSL=false
     driver-class-name: com.mysql.jdbc.Driver
 

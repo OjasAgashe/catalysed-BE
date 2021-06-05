@@ -1,9 +1,10 @@
 package com.ojas.gcp.firstappenginetryout.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.ojas.gcp.firstappenginetryout.entity.enums.ProgramStatus;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "programs")
@@ -34,10 +35,18 @@ public class Program {
     private String coordinatorName;
     @Column(name = "coordinator_email")
     private String coordinatorEmail;
-    @Column(name = "coordinator_phone_extension")
-    private String coordinatorPhoneExtension;
+    @Column(name = "coordinator_phone_country_name")
+    private String coordinatorPhoneCountryName;
+    @Column(name = "coordinator_phone_country_code")
+    private String coordinatorPhoneCountryCode;
     @Column(name = "coordinator_phone_number")
     private String coordinatorPhoneNumber;
+    @Enumerated(EnumType.STRING)
+    private ProgramStatus status;
+
+    @ManyToOne
+    @JoinColumn(name="org_id", nullable=false)
+    private Organization organization;
 
     @OneToOne(mappedBy = "program", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
@@ -46,6 +55,27 @@ public class Program {
     @OneToOne(mappedBy = "program", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private ProgramMentorFields mentorFields;
+
+    @OneToMany(mappedBy = "program", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<ProgramInvitation> invitations;
+
+
+    public ProgramStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ProgramStatus status) {
+        this.status = status;
+    }
+
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
+    }
 
     public Long getId() {
         return id;
@@ -139,12 +169,20 @@ public class Program {
         this.coordinatorEmail = coordinatorEmail;
     }
 
-    public String getCoordinatorPhoneExtension() {
-        return coordinatorPhoneExtension;
+    public String getCoordinatorPhoneCountryName() {
+        return coordinatorPhoneCountryName;
     }
 
-    public void setCoordinatorPhoneExtension(String coordinatorPhoneExtension) {
-        this.coordinatorPhoneExtension = coordinatorPhoneExtension;
+    public void setCoordinatorPhoneCountryName(String coordinatorPhoneCountryName) {
+        this.coordinatorPhoneCountryName = coordinatorPhoneCountryName;
+    }
+
+    public String getCoordinatorPhoneCountryCode() {
+        return coordinatorPhoneCountryCode;
+    }
+
+    public void setCoordinatorPhoneCountryCode(String coordinatorPhoneExtension) {
+        this.coordinatorPhoneCountryCode = coordinatorPhoneExtension;
     }
 
     public String getCoordinatorPhoneNumber() {
@@ -169,5 +207,13 @@ public class Program {
 
     public void setMentorFields(ProgramMentorFields mentorFields) {
         this.mentorFields = mentorFields;
+    }
+
+    public List<ProgramInvitation> getInvitations() {
+        return invitations;
+    }
+
+    public void setInvitations(List<ProgramInvitation> invitations) {
+        this.invitations = invitations;
     }
 }

@@ -1,5 +1,8 @@
 package com.ojas.gcp.firstappenginetryout.rest.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ojas.gcp.firstappenginetryout.entity.enums.ProgramStatus;
+
 public class ProgramDTO {
     private Long id;
     private String title;
@@ -15,13 +18,14 @@ public class ProgramDTO {
     private Coordinator coordinator;
     private StudentFields studentFields;
     private MentorFields mentorFields;
+    private ProgramStatus status;
 
     public ProgramDTO() {
     }
 
     public ProgramDTO(Long id, String title, String description, String tentativeStartDate, int durationInMonths,
                       String mode, String languageRequirements, AgeLimit ageLimit, String programLink,
-                      Coordinator coordinator, StudentFields studentFields, MentorFields mentorFields) {
+                      Coordinator coordinator, StudentFields studentFields, MentorFields mentorFields, ProgramStatus status) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -34,6 +38,7 @@ public class ProgramDTO {
         this.coordinator = coordinator;
         this.studentFields = studentFields;
         this.mentorFields = mentorFields;
+        this.status = status;
     }
 
     public Long getId() {
@@ -132,6 +137,14 @@ public class ProgramDTO {
         this.mentorFields = mentorFields;
     }
 
+    public ProgramStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ProgramStatus status) {
+        this.status = status;
+    }
+
     public static class AgeLimit {
         private int from;
         private int to;
@@ -164,17 +177,15 @@ public class ProgramDTO {
     public static class Coordinator {
         private String name;
         private String email;
-        private String phoneExtension;
-        private String phoneNumber;
+        private PhoneDTO contact;
 
         public Coordinator() {
         }
 
-        public Coordinator(String name, String email, String phoneExtension, String phoneNumber) {
+        public Coordinator(String name, String email, PhoneDTO contact) {
             this.name = name;
             this.email = email;
-            this.phoneExtension = phoneExtension;
-            this.phoneNumber = phoneNumber;
+            this.contact = contact;
         }
 
         public String getName() {
@@ -193,20 +204,12 @@ public class ProgramDTO {
             this.email = email;
         }
 
-        public String getPhoneExtension() {
-            return phoneExtension;
+        public PhoneDTO getContact() {
+            return contact;
         }
 
-        public void setPhoneExtension(String phoneExtension) {
-            this.phoneExtension = phoneExtension;
-        }
-
-        public String getPhoneNumber() {
-            return phoneNumber;
-        }
-
-        public void setPhoneNumber(String phoneNumber) {
-            this.phoneNumber = phoneNumber;
+        public void setContact(PhoneDTO contact) {
+            this.contact = contact;
         }
     }
 
@@ -217,19 +220,20 @@ public class ProgramDTO {
 //        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", timezone = "IST")
         private String applyBy;
         //application end date
-        private boolean isPaid;
+        @JsonProperty("isPaid")
+        private boolean paid;
         private double programFees;
         private String generalInstructions;
 
         public StudentFields() {
         }
 
-        public StudentFields(String subjectRequirements, int openings, boolean isPaid, String applyBy,
+        public StudentFields(String subjectRequirements, int openings, boolean paid, String applyBy,
                              double programFees, String generalInstructions) {
             this.subjectRequirements = subjectRequirements;
             this.openings = openings;
             this.applyBy = applyBy;
-            this.isPaid = isPaid;
+            this.paid = paid;
             this.programFees = programFees;
             this.generalInstructions = generalInstructions;
         }
@@ -258,12 +262,12 @@ public class ProgramDTO {
             this.applyBy = applyBy;
         }
 
-        public boolean isPaid() {
-            return isPaid;
+        public boolean getPaid() {
+            return paid;
         }
 
         public void setPaid(boolean paid) {
-            isPaid = paid;
+            this.paid = paid;
         }
 
         public double getProgramFees() {
