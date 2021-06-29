@@ -1,26 +1,41 @@
 package com.ojas.gcp.firstappenginetryout.service.helper;
 
 import com.ojas.gcp.firstappenginetryout.entity.AppUser;
+import com.ojas.gcp.firstappenginetryout.entity.ProfileUserEO;
 import com.ojas.gcp.firstappenginetryout.entity.Program;
 import com.ojas.gcp.firstappenginetryout.entity.ProgramInvitation;
 import com.ojas.gcp.firstappenginetryout.entity.ProgramInvitationDetails;
 import com.ojas.gcp.firstappenginetryout.entity.ProgramMentorFields;
+import com.ojas.gcp.firstappenginetryout.entity.ProgramParticipant;
 import com.ojas.gcp.firstappenginetryout.entity.ProgramStudentFields;
 import com.ojas.gcp.firstappenginetryout.entity.enums.InvitationStatus;
 import com.ojas.gcp.firstappenginetryout.entity.enums.ProgramStatus;
+import com.ojas.gcp.firstappenginetryout.entity.enums.UserType;
+import com.ojas.gcp.firstappenginetryout.repository.ProfileUserRepository;
+import com.ojas.gcp.firstappenginetryout.rest.dto.LocationDTO;
 import com.ojas.gcp.firstappenginetryout.rest.dto.PhoneDTO;
 import com.ojas.gcp.firstappenginetryout.rest.dto.ProgramDTO;
 import com.ojas.gcp.firstappenginetryout.rest.dto.ProgramInvitationDTO;
 import com.ojas.gcp.firstappenginetryout.rest.dto.ProgramOrgMetaDTO;
+import com.ojas.gcp.firstappenginetryout.rest.dto.participants.ProgramParticipantBaseDTO;
+import com.ojas.gcp.firstappenginetryout.rest.dto.participants.ProgramParticipantsDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import javax.xml.bind.ValidationException;
-import java.time.*;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class ProgramsHelper {
+
+    private ProfileUserRepository profileUserRepository;
+
+    @Autowired
+    public ProgramsHelper(ProfileUserRepository profileUserRepository) {
+        this.profileUserRepository = profileUserRepository;
+    }
 
     public void setProgramDetails(ProgramDTO programDTO, Program program) throws ValidationException {
         if (program.getStatus().equals(ProgramStatus.PUBLISHED) && programDTO.getStatus().equals(ProgramStatus.SAVED_TO_DRAFT)) {
@@ -148,13 +163,17 @@ public class ProgramsHelper {
         programInvitation.setProgram(program);
         programInvitation.setRecipient(appUser);
         programInvitation.setEmailId(invitationDTO.getEmailId());
-        programInvitation.setResponseStatus(InvitationStatus.NOT_RESPONDED);
+        programInvitation.setResponseStatus(InvitationStatus.PENDING);
         programInvitation.setSentAt(OffsetDateTime.now(ZoneOffset.UTC).toString());
         programInvitation.setUserType(invitationDTO.getUserType());
+        programInvitation.setName(invitationDTO.getName());
 
         ProgramInvitationDetails details = new ProgramInvitationDetails();
         details.setMessage(invitationDTO.getMessage());
         details.setSubject(invitationDTO.getSubject());
+        List<ProgramInvitation> invitations = new ArrayList<>();
+        invitations.add(programInvitation);
+        details.setInvitations(invitations);
 
         programInvitation.setInvitationDetails(details);
         return programInvitation;
@@ -163,19 +182,47 @@ public class ProgramsHelper {
     public List<ProgramInvitationDTO> buildProgramInvitationDTOList(List<ProgramInvitation> programInvitationList) {
         List<ProgramInvitationDTO> invitationDTOList = new ArrayList<>();
         programInvitationList.forEach(invitation -> {
-            ProgramInvitationDetails details = invitation.getInvitationDetails();
-            invitationDTOList.add(new ProgramInvitationDTO(
-                    invitation.getId(),
-                    invitation.getProgram().getId(),
-                    invitation.getRecipient().getId(),
-                    invitation.getEmailId(),
-                    invitation.getName(),
-                    invitation.getUserType(),
-                    invitation.getResponseStatus(),
-                    details.getSubject(),
-                    details.getMessage()
-                    ));
+            invitationDTOList.add(buildProgramInvitationDTO(invitation));
         });
         return invitationDTOList;
+    }
+
+    public ProgramInvitationDTO buildProgramInvitationDTO(ProgramInvitation invitation) {
+        ProgramInvitationDetails details = invitation.getInvitationDetails();
+        return new ProgramInvitationDTO(
+                invitation.getId(),
+                invitation.getProgram().getId(),
+                invitation.getRecipient() == null ? null : invitation.getRecipient().getId(),
+                invitation.getEmailId(),
+                invitation.getName(),
+                invitation.getUserType(),
+                invitation.getResponseStatus(),
+                details.getSubject(),
+                details.getMessage(),
+                invitation.getSentAt()
+        );
+    }
+
+    public ProgramParticipantsDTO buildProgramParticipantsDTO(Long programId, List<ProgramParticipant> programParticipants) {
+        List<ProgramParticipantBaseDTO> studentParticipantList = new ArrayList<>();
+        List<ProgramParticipantBaseDTO> mentorParticipantList = new ArrayList<>();
+        programParticipants.forEach(programParticipant ->  {
+            AppUser user = programParticipant.getUser();
+            ProfileUserEO profile = profileUserRepository.findById(user.getId()).get();
+            ProgramParticipantBaseDTO participantBaseDTO = new ProgramParticipantBaseDTO(profile.getId(), user.getFirstName(), user.getLastName(),
+                    user.getEmail(), new PhoneDTO(profile.getContactPhoneCountryName(), profile.getContactPhoneCountryCode(), profile.getContactPhoneNumber()),
+                    new LocationDTO(profile.getLocationCountry(), profile.getLocationRegion()));
+            if (user.getType() == UserType.STUDENT) {
+                studentParticipantList.add(participantBaseDTO);
+            } else {
+                mentorParticipantList.add(participantBaseDTO);
+            }
+        });
+        
+        ProgramParticipantsDTO programParticipantsDTO = new ProgramParticipantsDTO();
+        programParticipantsDTO.setProgramId(programId);
+        programParticipantsDTO.setStudentParticipants(studentParticipantList);
+        programParticipantsDTO.setMentorParticipants(mentorParticipantList);
+        return programParticipantsDTO;
     }
 }

@@ -26,6 +26,7 @@ public class UserDTO {
     }
 
     public UserDTO(Long id, String userName, String email, UserType userType, boolean isActive) {
+        this.id = id;
         this.userName = userName;
         this.email = email;
         this.userType = userType;

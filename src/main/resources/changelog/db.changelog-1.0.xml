@@ -191,8 +191,46 @@
 
     <changeSet id="7" author="ojas.v.agashe@gmail.com">
         <comment>Adding program invitation tables</comment>
+        <createTable tableName="app_invitations">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="org_id" type="BIGINT" >
+                <constraints nullable="false" foreignKeyName="fk_app_invite_organization" references="organizations(id)"/>
+            </column>
+            <column name="invitation_key" type="varchar(50)"/>
+            <column name="email" type="varchar(50)"/>
+            <column name="type" type="varchar(25)"/>
+            <column name="program_id" type="BIGINT"/>
+            <column name="status" type="varchar(25)"/>
+        </createTable>
+        <createTable tableName="org_user_connections">
+            <column name="org_id" type="BIGINT" >
+                <constraints nullable="false" primaryKey="true" primaryKeyName="org_user_pk"/>
+            </column>
+            <column name="user_id" type="BIGINT" >
+                <constraints nullable="false" primaryKey="true" primaryKeyName="org_user_pk"/>
+            </column>
+            <column name="user_type" type="varchar(50)"/>
+        </createTable>
+        <createTable tableName="program_participants">
+            <column name="program_id" type="BIGINT" >
+                <constraints nullable="false" primaryKey="true" primaryKeyName="program_participant_pk"/>
+            </column>
+            <column name="user_id" type="BIGINT" >
+                <constraints nullable="false" primaryKey="true" primaryKeyName="program_participant_pk"/>
+            </column>
+            <column name="user_type" type="varchar(50)"/>
+        </createTable>
+        <createTable tableName="program_invitation_details">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="subject" type="varchar(250)"/>
+            <column name="message" type="TEXT"/>
+        </createTable>
         <createTable tableName="program_invitations">
-            <column name="id" type="BIGINT" >
+            <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="program_id" type="BIGINT" >
@@ -210,13 +248,19 @@
             <column name="sent_at" type="varchar(50)"/>
             <column name="response_status" type="varchar(10)"/>
         </createTable>
-        <createTable tableName="program_invitation_details">
-            <column name="id" type="BIGINT" >
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="subject" type="varchar(250)"/>
-            <column name="message" type="TEXT"/>
-        </createTable>
     </changeSet>
 
+    <changeSet id="8" author="ojas.v.agashe@gmail.com">
+        <comment>Adding org Id to the program participants table and deleting current composite key</comment>
+        <dropPrimaryKey tableName="program_participants" constraintName="program_participant_pk"/>
+
+        <addColumn tableName="program_participants">
+            <column name="org_id" type="BIGINT"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="9" author="ojas.v.agashe@gmail.com">
+        <comment>Adding org Id to the program participants table's composite key</comment>
+        <addPrimaryKey tableName="program_participants" columnNames="program_id,user_id,org_id" constraintName="program_participant_pk"/>
+    </changeSet>
 </databaseChangeLog>

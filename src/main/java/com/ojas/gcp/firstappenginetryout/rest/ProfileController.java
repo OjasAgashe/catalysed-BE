@@ -2,74 +2,68 @@ package com.ojas.gcp.firstappenginetryout.rest;
 
 import com.ojas.gcp.firstappenginetryout.auth.SessionUser;
 import com.ojas.gcp.firstappenginetryout.entity.enums.UserType;
-import com.ojas.gcp.firstappenginetryout.rest.dto.profile.ProfileBuilderMentorDTO;
-import com.ojas.gcp.firstappenginetryout.rest.dto.profile.ProfileBuilderOrgDTO;
-import com.ojas.gcp.firstappenginetryout.rest.dto.profile.ProfileBuilderStudentDTO;
+import com.ojas.gcp.firstappenginetryout.rest.dto.profile.OrgProfileDTO;
 import com.ojas.gcp.firstappenginetryout.service.ProfileService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.xml.bind.ValidationException;
 
-@RestController
 public class ProfileController {
-    private ProfileService profileService;
 
-    @Autowired
+    private final ProfileService service;
+
     public ProfileController(ProfileService profileService) {
-        this.profileService = profileService;
+        this.service = profileService;
     }
-    @PostMapping(value = "profile/organization")
-    public ResponseEntity<Object> setOrgProfile(@AuthenticationPrincipal Authentication authentication,
-                                                 @RequestBody ProfileBuilderOrgDTO orgProfileDTO) throws ValidationException {
+
+
+    @GetMapping(value = "organization/{orgId}/profile")
+    public ResponseEntity<OrgProfileDTO> getOrgProfile(@AuthenticationPrincipal Authentication authentication,
+                                                @PathVariable Long orgId) throws ValidationException {
         SessionUser user = (SessionUser)authentication.getPrincipal();
         if (user.getUserType() != UserType.ORGANIZATION_USER) {
-            throw new ValidationException("Cannot create a profile as user is not a org admin");
+            throw new ValidationException("User is not an org admin");
         }
-        profileService.setProfile(user, orgProfileDTO);
-        return ResponseEntity.ok("Profile created successfully");
+        OrgProfileDTO orgProfileDTO = service.getOrgProfile(user, orgId);
+        return ResponseEntity.ok(orgProfileDTO);
     }
 
-    @PostMapping(value = "profile/mentor")
-    public ResponseEntity<Object> setMentorProfile(@AuthenticationPrincipal Authentication authentication,
-                                                 @RequestBody ProfileBuilderMentorDTO mentorProfileDTO) throws ValidationException {
+    @PutMapping(value = "organization/{orgId}/profile")
+    public ResponseEntity<Object> updateOrgProfile(@AuthenticationPrincipal Authentication authentication,
+                                                   @PathVariable Long orgId, @RequestBody OrgProfileDTO profileDTO) throws ValidationException {
         SessionUser user = (SessionUser)authentication.getPrincipal();
-        if (user.getUserType() != UserType.MENTOR) {
-            throw new ValidationException("Cannot create a profile as user is not a mentor");
+        if (user.getUserType() != UserType.ORGANIZATION_USER) {
+            throw new ValidationException("User is not an org admin");
         }
-        profileService.setProfile(user, mentorProfileDTO);
-        return ResponseEntity.ok("Profile created successfully");
+        service.updateOrgProfile(user, profileDTO, orgId);
+        return ResponseEntity.ok("Profile updated successfully");
     }
 
-    @PostMapping(value = "profile/student")
-    public ResponseEntity<Object> setStudentProfile(@AuthenticationPrincipal Authentication authentication,
-                                                 @RequestBody ProfileBuilderStudentDTO studentProfileDTO) throws ValidationException {
-        SessionUser user = (SessionUser)authentication.getPrincipal();
-        if (user.getUserType() != UserType.STUDENT) {
-            throw new ValidationException("Cannot create a profile as user is not a student");
-        }
-        profileService.setProfile(user, studentProfileDTO);
-        return ResponseEntity.ok("Profile created successfully");
-    }
 
-    @GetMapping(value = "profile/organization")
-    public ResponseEntity<Object> getOrgProfile(@AuthenticationPrincipal Authentication authentication) {
-        SessionUser user = (SessionUser)authentication.getPrincipal();
-        return ResponseEntity.ok(profileService.getOrgProfile(user));
-    }
+//    @GetMapping(value = "mentor/{mentorId}/profile")
+//    public ResponseEntity<Object> getMentorProfile(@AuthenticationPrincipal Authentication authentication) throws ValidationException {
+//        SessionUser user = (SessionUser)authentication.getPrincipal();
+//        if (user.getUserType() != UserType.MENTOR) {
+//            throw new ValidationException("User is not an org admin");
+//        }
+//        return ResponseEntity.ok("Profile created successfully");
+//    }
+//
+//    @GetMapping(value = "student/{studentId}/profile")
+//    public ResponseEntity<Object> getStudentProfile(@AuthenticationPrincipal Authentication authentication) throws ValidationException {
+//        SessionUser user = (SessionUser)authentication.getPrincipal();
+//        if (user.getUserType() != UserType.ORGANIZATION_USER) {
+//            throw new ValidationException("User is not an org admin");
+//        }
+//        return ResponseEntity.ok("Profile created successfully");
+//    }
 
-    @GetMapping(value = "profile/mentor")
-    public ResponseEntity<Object> getMentorProfile(@AuthenticationPrincipal Authentication authentication) {
-        SessionUser user = (SessionUser)authentication.getPrincipal();
-        return ResponseEntity.ok(profileService.getMentorProfile(user));
-    }
+    //GET & Update profile for org, students and Mentor
 
-    @GetMapping(value = "profile/student")
-    public ResponseEntity<Object> getStudentProfile(@AuthenticationPrincipal Authentication authentication) {
-        SessionUser user = (SessionUser)authentication.getPrincipal();
-        return ResponseEntity.ok(profileService.getStudentProfile(user));
-    }
 }

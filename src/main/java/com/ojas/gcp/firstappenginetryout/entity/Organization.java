@@ -1,6 +1,7 @@
 package com.ojas.gcp.firstappenginetryout.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,7 +12,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "organizations")
@@ -39,6 +42,10 @@ public class Organization {
     private OrganizationUser organizationUser;
     @OneToMany(mappedBy = "organization")
     private List<Program> programs;
+
+    @OneToMany(mappedBy = "organization")
+    @JsonManagedReference
+    private Set<OrgUserConnection> participants = new HashSet<OrgUserConnection>();
 
 
     public Organization() {
@@ -156,5 +163,13 @@ public class Organization {
 
     public void setPrograms(List<Program> programs) {
         this.programs = programs;
+    }
+
+    public Set<OrgUserConnection> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(Set<OrgUserConnection> participants) {
+        this.participants = participants;
     }
 }

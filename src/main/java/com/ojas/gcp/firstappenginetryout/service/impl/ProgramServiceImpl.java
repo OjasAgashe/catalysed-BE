@@ -2,47 +2,56 @@ package com.ojas.gcp.firstappenginetryout.service.impl;
 
 import com.ojas.gcp.firstappenginetryout.auth.SessionUser;
 import com.ojas.gcp.firstappenginetryout.entity.*;
+import com.ojas.gcp.firstappenginetryout.entity.enums.InvitationStatus;
+import com.ojas.gcp.firstappenginetryout.entity.enums.InvitationType;
 import com.ojas.gcp.firstappenginetryout.entity.enums.ProgramStatus;
+import com.ojas.gcp.firstappenginetryout.entity.enums.UserType;
 import com.ojas.gcp.firstappenginetryout.exception.BadRequestBody;
 import com.ojas.gcp.firstappenginetryout.exception.DuplicateResourceException;
 import com.ojas.gcp.firstappenginetryout.exception.ResourceNotFoundException;
 import com.ojas.gcp.firstappenginetryout.repository.*;
-import com.ojas.gcp.firstappenginetryout.rest.dto.PhoneDTO;
 import com.ojas.gcp.firstappenginetryout.rest.dto.ProgramDTO;
 import com.ojas.gcp.firstappenginetryout.rest.dto.ProgramInvitationDTO;
 import com.ojas.gcp.firstappenginetryout.rest.dto.ProgramOrgMetaDTO;
+import com.ojas.gcp.firstappenginetryout.rest.dto.participants.ProgramParticipantsDTO;
 import com.ojas.gcp.firstappenginetryout.service.ProgramService;
+import com.ojas.gcp.firstappenginetryout.service.helper.AuthValidationHelper;
 import com.ojas.gcp.firstappenginetryout.service.helper.ProgramsHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.xml.bind.ValidationException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class ProgramServiceImpl implements ProgramService {
     private final ProgramRepository programRepository;
-    private final OrganizationUserRepository orgUserRepository;
     private final OrganizationRepository orgRepository;
     private final AppUserRepository appUserRepository;
+    private final ProgramInvitationDetailsRepository programInvitationDetailsRepository;
     private final ProgramInvitationsRepository programInvitationRepository;
+    private final AppInvitationsRepository appInvitationsRepository;
+    private final ProgramParticipantRepository programParticipantRepository;
     private final ProgramsHelper helper;
+    private final AuthValidationHelper authValidationHelper;
 
     @Autowired
-    public ProgramServiceImpl(ProgramRepository programRepository, OrganizationUserRepository orgUserRepository,
-                              OrganizationRepository orgRepository, ProgramsHelper helper, AppUserRepository appUserRepository,
-                              ProgramInvitationsRepository programInvitationRepository) {
+    public ProgramServiceImpl(ProgramRepository programRepository, OrganizationRepository orgRepository, ProgramsHelper helper,
+                              AppUserRepository appUserRepository, ProgramInvitationDetailsRepository programInvitationDetailsRepository,
+                              ProgramInvitationsRepository programInvitationRepository,
+                              AppInvitationsRepository appInvitationsRepository, ProgramParticipantRepository programParticipantRepository,
+                              AuthValidationHelper authValidationHelper) {
         this.programRepository = programRepository;
-        this.orgUserRepository = orgUserRepository;
         this.orgRepository = orgRepository;
         this.appUserRepository = appUserRepository;
+        this.programInvitationDetailsRepository = programInvitationDetailsRepository;
         this.programInvitationRepository = programInvitationRepository;
+        this.appInvitationsRepository = appInvitationsRepository;
+        this.programParticipantRepository = programParticipantRepository;
         this.helper = helper;
+        this.authValidationHelper = authValidationHelper;
     }
 
     @Override
@@ -54,7 +63,7 @@ public class ProgramServiceImpl implements ProgramService {
                 throw new Exception("Program with Id already present");
             }
         }
-        OrganizationUser sessionOrgUser =getSessionOrgUser(user);
+        OrganizationUser sessionOrgUser = authValidationHelper.getSessionOrgUser(user);
 
         Optional<Program> dbRecordByTitle = programRepository.findByTitle(programDTO.getTitle());
         if (dbRecordByTitle.isPresent() && dbRecordByTitle.get().getOrganization().getId().equals(sessionOrgUser.getOrganization().getId())) {
@@ -74,7 +83,7 @@ public class ProgramServiceImpl implements ProgramService {
         }
 
         Program program = getProgramRecord(programDTO.getId());
-        validateSessionUserOrgAccess(user, program.getOrganization().getId());
+        authValidationHelper.validateSessionUserOrgAccess(user, program.getOrganization().getId());
         helper.setProgramDetails(programDTO, program);
         programRepository.saveAndFlush(program);
 //        return buildProgramDTO(program);
@@ -83,7 +92,7 @@ public class ProgramServiceImpl implements ProgramService {
     @Override
     public void updateProgramStatus(SessionUser user, Long programId) throws Exception {
         Program program = getProgramRecord(programId);
-        validateSessionUserOrgAccess(user, program.getOrganization().getId());
+        authValidationHelper.validateSessionUserOrgAccess(user, program.getOrganization().getId());
         if (program.getStatus().equals(ProgramStatus.PUBLISHED)) {
             throw new ValidationException("Program is already published");
         }
@@ -94,7 +103,7 @@ public class ProgramServiceImpl implements ProgramService {
     @Override
     public ProgramDTO getProgram(SessionUser user, Long id) throws Exception {
         Program program = getProgramRecord(id);
-        validateSessionUserOrgAccess(user, program.getOrganization().getId());
+        authValidationHelper.validateSessionUserOrgAccess(user, program.getOrganization().getId());
         return helper.buildProgramDTO(program);
     }
 
@@ -105,7 +114,7 @@ public class ProgramServiceImpl implements ProgramService {
         if(!org.isPresent()) {
             throw new ValidationException("Invalid org Id");
         }
-        validateSessionUserOrgAccess(user, orgId);
+        authValidationHelper.validateSessionUserOrgAccess(user, orgId);
 
         List<Program> programs = org.get().getPrograms();
         return programs.stream().map(helper::buildProgramOrgMetaDTO).collect(Collectors.toList());
@@ -115,31 +124,58 @@ public class ProgramServiceImpl implements ProgramService {
     public ProgramInvitationDTO createAndSendProgramInvitation(SessionUser user, Long programId,
                                                                ProgramInvitationDTO invitationDTO) throws ValidationException {
         Program program = getProgramRecord(programId);
-        validateSessionUserOrgAccess(user, program.getOrganization().getId());
+        authValidationHelper.validateSessionUserOrgAccess(user, program.getOrganization().getId());
         if (!program.getStatus().equals(ProgramStatus.PUBLISHED)) {
             throw new ValidationException("Program is not yet published");
         }
+        Optional<ProgramInvitation> invitationExists = programInvitationRepository.findByProgramIdAndEmailId(programId, invitationDTO.getEmailId());
+        if (invitationExists.isPresent()) {
+            throw new ValidationException(String.format("Program invitation for email : %s is already created", invitationDTO.getEmailId()));
+        }
+
         AppUser appUser = null;
         if (invitationDTO.getUserId() != null) {
             appUser = appUserRepository.findById(invitationDTO.getUserId()).get();
         }
         ProgramInvitation programInvitation = helper.buildProgramInvitation(program, appUser, invitationDTO);
+        programInvitationDetailsRepository.saveAndFlush(programInvitation.getInvitationDetails());
         programInvitationRepository.saveAndFlush(programInvitation);
-        return invitationDTO;
+
+        AppInvitation appInvitation = new AppInvitation(
+                program.getOrganization(),
+                UUID.randomUUID().toString(),
+                invitationDTO.getEmailId(),
+                InvitationType.PROGRAM,
+                programId,
+                InvitationStatus.PENDING
+                );
+        appInvitationsRepository.saveAndFlush(appInvitation);
+        return helper.buildProgramInvitationDTO(programInvitation);
     }
 
     @Override
     public List<ProgramInvitationDTO> getProgramInvitations(SessionUser user, Long programId) throws ValidationException {
         Program program = getProgramRecord(programId);
-        validateSessionUserOrgAccess(user, program.getOrganization().getId());
+        authValidationHelper.validateSessionUserOrgAccess(user, program.getOrganization().getId());
         if (!program.getStatus().equals(ProgramStatus.PUBLISHED)) {
             throw new ValidationException("Program is not yet published");
         }
-        List<ProgramInvitation> programInvitations = programInvitationRepository.findByProgram(programId);
+        List<ProgramInvitation> programInvitations = programInvitationRepository.findByProgramId(programId);
         if (CollectionUtils.isEmpty(programInvitations)) {
             return Collections.emptyList();
         }
         return helper.buildProgramInvitationDTOList(programInvitations);
+    }
+
+    @Override
+    public ProgramParticipantsDTO getProgramParticipants(SessionUser user, Long programId, UserType participantType) throws ValidationException {
+        Program program = getProgramRecord(programId);
+        authValidationHelper.validateSessionUserOrgAccess(user, program.getOrganization().getId());
+        if (!program.getStatus().equals(ProgramStatus.PUBLISHED)) {
+            throw new ValidationException("Program is not yet published");
+        }
+        List<ProgramParticipant> programParticipants = programParticipantRepository.findByIdProgramId(programId);
+        return helper.buildProgramParticipantsDTO(programId, programParticipants);
     }
 
     private Program getProgramRecord(Long programId) {
@@ -148,17 +184,6 @@ public class ProgramServiceImpl implements ProgramService {
             throw new ResourceNotFoundException("Program with Id not found in System");
         }
         return dbRecordById.get();
-    }
-
-    private void validateSessionUserOrgAccess(SessionUser user, Long orgId) throws ValidationException {
-        OrganizationUser sessionOrgUser = getSessionOrgUser(user);
-        if (! sessionOrgUser.getOrganization().getId().equals(orgId)) {
-            throw new ValidationException("Program doesn't belong to current logged in users org");
-        }
-    }
-
-    private OrganizationUser getSessionOrgUser(SessionUser user) {
-        return orgUserRepository.findById(user.getId()).get();
     }
 
 //    private String getLocalDateTime(String date) {

@@ -2,9 +2,22 @@ package com.ojas.gcp.firstappenginetryout.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ojas.gcp.firstappenginetryout.entity.enums.ProgramStatus;
-
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "programs")
@@ -60,6 +73,9 @@ public class Program {
     @JsonManagedReference
     private List<ProgramInvitation> invitations;
 
+    @OneToMany(mappedBy = "program")
+    @JsonManagedReference
+    private Set<ProgramParticipant> programParticipant = new HashSet<ProgramParticipant>();
 
     public ProgramStatus getStatus() {
         return status;
@@ -215,5 +231,13 @@ public class Program {
 
     public void setInvitations(List<ProgramInvitation> invitations) {
         this.invitations = invitations;
+    }
+
+    public Set<ProgramParticipant> getProgramParticipant() {
+        return programParticipant;
+    }
+
+    public void setProgramParticipant(Set<ProgramParticipant> programParticipant) {
+        this.programParticipant = programParticipant;
     }
 }

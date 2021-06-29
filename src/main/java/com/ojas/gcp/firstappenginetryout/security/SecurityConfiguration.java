@@ -6,6 +6,7 @@ import com.ojas.gcp.firstappenginetryout.repository.UserRepository;
 import com.ojas.gcp.firstappenginetryout.rest.dto.ErrorResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -107,7 +108,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 });
 
         //TO-DO : Remove for prod build
-        http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
+        CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
+        corsConfiguration.addAllowedMethod("PUT");
+        http.cors().configurationSource(request -> corsConfiguration);
 
         // , "/static/**/**"  "/organizationDetail", "/organizer",
     }
