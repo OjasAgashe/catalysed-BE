@@ -263,4 +263,34 @@
         <comment>Adding org Id to the program participants table's composite key</comment>
         <addPrimaryKey tableName="program_participants" columnNames="program_id,user_id,org_id" constraintName="program_participant_pk"/>
     </changeSet>
+
+    <changeSet id="10" author="ojas.v.agashe@gmail.com">
+        <comment>Adding program application table</comment>
+        <createTable tableName="program_applications">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="org_id" type="BIGINT" >
+                <constraints nullable="false" foreignKeyName="fk_program_application_organization" references="organizations(id)"/>
+            </column>
+            <column name="program_id" type="BIGINT" >
+                <constraints nullable="false" foreignKeyName="fk_program_application_program" references="programs(id)"/>
+            </column>
+            <column name="user_id" type="BIGINT" >
+                <constraints nullable="false" foreignKeyName="fk_program_application_app_user" references="app_users(id)"/>
+            </column>
+            <column name="user_type" type="varchar(25)"/>
+            <column name="status" type="varchar(25)"/>
+            <column name="is_reapplied" type="BOOLEAN" defaultValueBoolean="false"/>
+            <column name="applied_on" type="varchar(50)"/>
+            <column name="is_fetched_by_org" type="BOOLEAN" defaultValueBoolean="false"/>
+            <column name="is_viewed_by_org" type="BOOLEAN" defaultValueBoolean="false"/>
+            <column name="question_1" type="varchar(500)"/>
+            <column name="answer_1" type="TEXT"/>
+            <column name="question_2" type="varchar(500)"/>
+            <column name="answer_2" type="TEXT"/>
+            <column name="question_3" type="varchar(500)"/>
+            <column name="answer_3" type="TEXT"/>
+        </createTable>    </changeSet>
+
 </databaseChangeLog>

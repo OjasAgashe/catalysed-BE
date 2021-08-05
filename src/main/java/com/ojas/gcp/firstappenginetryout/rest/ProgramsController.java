@@ -88,29 +88,29 @@ public class ProgramsController {
 //        return ResponseEntity.ok(programParticipant);
 //    }
 
-    @GetMapping(value = "organization/{orgId}/connections")
-    public ResponseEntity<Object> getOrgConnections(@PathVariable Long orgId, @AuthenticationPrincipal Authentication authentication) throws Exception {
-        SessionUser user = (SessionUser) authentication.getPrincipal();
-        List<OrgUserConnection> orgUserConnections = orgUserConnectionRepository.findByIdOrgId(orgId);
-
-        if (CollectionUtils.isEmpty(orgUserConnections)) {
-            orgUserConnections = new ArrayList<>();
-        }
-
-        List<OrgUserConnectionDTO> resultList = new ArrayList<>();
-        orgUserConnections.stream().forEach(connection -> {
-            Organization org = connection.getOrganization();
-            AppUser appUser = connection.getUser();
-            OrgUserConnectionDTO connectionDTO = new OrgUserConnectionDTO(
-                    new Organization(org.getName(), org.getDescription(), org.getWebsite(), org.getSocialMediaCode(), org.getSocialMediaLink()),
-                    new Student(appUser.getId(), "A", "VVS"),
-//                    new AppUser(appUser.getEmail(), appUser.getPassword(), appUser.getFirstName(), appUser.getLastName(), appUser.getType(), appUser.isAccountActivated(), appUser.isAccountVerified(), appUser.isProfileCreated()),
-                    connection.getUserType()
-            );
-            resultList.add(connectionDTO);
-        });
-        return ResponseEntity.ok(resultList);
-    }
+//    @GetMapping(value = "organization/{orgId}/connections")
+//    public ResponseEntity<Object> getOrgConnections(@PathVariable Long orgId, @AuthenticationPrincipal Authentication authentication) throws Exception {
+//        SessionUser user = (SessionUser) authentication.getPrincipal();
+//        List<OrgUserConnection> orgUserConnections = orgUserConnectionRepository.findByIdOrgId(orgId);
+//
+//        if (CollectionUtils.isEmpty(orgUserConnections)) {
+//            orgUserConnections = new ArrayList<>();
+//        }
+//
+//        List<OrgUserConnectionDTO> resultList = new ArrayList<>();
+//        orgUserConnections.stream().forEach(connection -> {
+//            Organization org = connection.getOrganization();
+//            AppUser appUser = connection.getUser();
+//            OrgUserConnectionDTO connectionDTO = new OrgUserConnectionDTO(
+//                    new Organization(org.getName(), org.getDescription(), org.getWebsite(), org.getSocialMediaCode(), org.getSocialMediaLink()),
+//                    new Student(appUser.getId(), "A", "VVS"),
+////                    new AppUser(appUser.getEmail(), appUser.getPassword(), appUser.getFirstName(), appUser.getLastName(), appUser.getType(), appUser.isAccountActivated(), appUser.isAccountVerified(), appUser.isProfileCreated()),
+//                    connection.getUserType()
+//            );
+//            resultList.add(connectionDTO);
+//        });
+//        return ResponseEntity.ok(resultList);
+//    }
 
     @GetMapping(value = "organization/programs/{programId}/participants")
     public ResponseEntity<Object> getProgramParticipants(@PathVariable Long programId,

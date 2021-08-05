@@ -125,9 +125,7 @@ public class ProgramsHelper {
         return program;
     }
 
-    public ProgramDTO buildProgramDTO(Program program) {
-        ProgramStudentFields studentFields = program.getStudentFields();
-        ProgramMentorFields mentorFields = program.getMentorFields();
+    public ProgramDTO buildProgramDTO(Program program, UserType userType) {
         ProgramDTO programDTO = new ProgramDTO(
                 program.getId(),
                 program.getTitle(),
@@ -139,10 +137,35 @@ public class ProgramsHelper {
                 new ProgramDTO.AgeLimit(program.getStudentAgeLimitFrom(), program.getStudentAgeLimitTo()),
                 program.getProgramLink(),
                 new ProgramDTO.Coordinator(program.getCoordinatorName(), program.getCoordinatorEmail(), new PhoneDTO(program.getCoordinatorPhoneCountryName(), program.getCoordinatorPhoneCountryCode(), program.getCoordinatorPhoneNumber())),
-                new ProgramDTO.StudentFields(studentFields.getSubjectRequirements(), studentFields.getOpenings(), studentFields.isPaid(), studentFields.getApplyBy(), studentFields.getProgramFees(), studentFields.getGeneralInstructions()),
-                new ProgramDTO.MentorFields(mentorFields.getSubjectRequirements(), mentorFields.getOpenings(), mentorFields.getApplyBy(), mentorFields.getGeneralInstructions()),
+                null,
+                null,
                 program.getStatus()
         );
+
+        ProgramStudentFields studentFields = null;
+        ProgramMentorFields mentorFields = null;
+        if (userType == UserType.ORGANIZATION_USER || userType == UserType.STUDENT) {
+            studentFields = program.getStudentFields();
+            programDTO.setStudentFields(new ProgramDTO.StudentFields(
+                    studentFields.getSubjectRequirements(),
+                    studentFields.getOpenings(),
+                    studentFields.isPaid(),
+                    studentFields.getApplyBy(),
+                    studentFields.getProgramFees(),
+                    studentFields.getGeneralInstructions()
+                    )
+            );
+        }
+        if (userType == UserType.ORGANIZATION_USER || userType == UserType.MENTOR) {
+            mentorFields = program.getMentorFields();
+            programDTO.setMentorFields(new ProgramDTO.MentorFields(
+                    mentorFields.getSubjectRequirements(),
+                    mentorFields.getOpenings(),
+                    mentorFields.getApplyBy(),
+                    mentorFields.getGeneralInstructions()
+                    )
+            );
+        }
         return programDTO;
     }
 

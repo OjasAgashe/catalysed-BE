@@ -25,6 +25,8 @@ import javax.xml.bind.ValidationException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.ojas.gcp.firstappenginetryout.entity.enums.UserType.ORGANIZATION_USER;
+
 @Service
 public class ProgramServiceImpl implements ProgramService {
     private final ProgramRepository programRepository;
@@ -72,7 +74,7 @@ public class ProgramServiceImpl implements ProgramService {
         Program program = helper.buildProgram(programDTO);
         program.setOrganization(sessionOrgUser.getOrganization());
         programRepository.saveAndFlush(program);
-        return helper.buildProgramDTO(program);
+        return helper.buildProgramDTO(program, ORGANIZATION_USER);
     }
 
 
@@ -104,7 +106,7 @@ public class ProgramServiceImpl implements ProgramService {
     public ProgramDTO getProgram(SessionUser user, Long id) throws Exception {
         Program program = getProgramRecord(id);
         authValidationHelper.validateSessionUserOrgAccess(user, program.getOrganization().getId());
-        return helper.buildProgramDTO(program);
+        return helper.buildProgramDTO(program, ORGANIZATION_USER);
     }
 
     @Override
