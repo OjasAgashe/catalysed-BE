@@ -11,8 +11,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import javax.xml.bind.ValidationException;
 import java.util.List;
 
@@ -24,15 +24,20 @@ public class DirectoryController {
         this.service = service;
     }
 
-    @GetMapping(value = "organization/{orgId}/connections/students")
-    public ResponseEntity<Object> getOrgStudentConnections(@AuthenticationPrincipal Authentication authentication,
-                                                           @PathVariable Long orgId) throws ValidationException {
+    @GetMapping(value = "organization/{orgId}/connections")
+    public ResponseEntity<Object> getOrgConnections(@AuthenticationPrincipal Authentication authentication,
+                                                           @PathVariable Long orgId, @RequestParam(name = "type") UserType type) throws ValidationException {
         SessionUser user = (SessionUser)authentication.getPrincipal();
         if (user.getUserType() != UserType.ORGANIZATION_USER) {
             throw new ValidationException("User is not an org admin");
         }
-        List<OrgUserDirectoryMetaDTO> studentMeta = service.getOrgStudentConnections(orgId);
-        return ResponseEntity.ok(studentMeta);
+        List<OrgUserDirectoryMetaDTO> connectionMeta;
+        if (type == UserType.STUDENT) {
+            connectionMeta = service.getOrgStudentConnections(orgId);
+        } else {
+            connectionMeta = service.getOrgMentorConnections(orgId);
+        }
+        return ResponseEntity.ok(connectionMeta);
     }
 
     @GetMapping(value = "organization/{orgId}/connections/students/{studentId}")
@@ -47,16 +52,16 @@ public class DirectoryController {
     }
 
 
-    @GetMapping(value = "organization/{orgId}/connections/mentors")
-    public ResponseEntity<Object> getOrgMentorConnections(@AuthenticationPrincipal Authentication authentication,
-                                                          @PathVariable Long orgId) throws ValidationException {
-        SessionUser user = (SessionUser)authentication.getPrincipal();
-        if (user.getUserType() != UserType.ORGANIZATION_USER) {
-            throw new ValidationException("User is not an org admin");
-        }
-        List<OrgUserDirectoryMetaDTO> mentorMeta = service.getOrgMentorConnections(orgId);
-        return ResponseEntity.ok(mentorMeta);
-    }
+//    @GetMapping(value = "organization/{orgId}/connections/mentors")
+//    public ResponseEntity<Object> getOrgMentorConnections(@AuthenticationPrincipal Authentication authentication,
+//                                                          @PathVariable Long orgId) throws ValidationException {
+//        SessionUser user = (SessionUser)authentication.getPrincipal();
+//        if (user.getUserType() != UserType.ORGANIZATION_USER) {
+//            throw new ValidationException("User is not an org admin");
+//        }
+//        List<OrgUserDirectoryMetaDTO> mentorMeta = service.getOrgMentorConnections(orgId);
+//        return ResponseEntity.ok(mentorMeta);
+//    }
 
     @GetMapping(value = "organization/{orgId}/connections/mentors/{mentorId}")
     public ResponseEntity<Object> getConnectedMentor(@AuthenticationPrincipal Authentication authentication,
