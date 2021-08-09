@@ -1,6 +1,5 @@
 package com.ojas.gcp.firstappenginetryout.rest.dto.participants;
 
-import com.ojas.gcp.firstappenginetryout.rest.dto.ContactDetailsDTO;
 import com.ojas.gcp.firstappenginetryout.rest.dto.LocationDTO;
 import com.ojas.gcp.firstappenginetryout.rest.dto.PhoneDTO;
 
