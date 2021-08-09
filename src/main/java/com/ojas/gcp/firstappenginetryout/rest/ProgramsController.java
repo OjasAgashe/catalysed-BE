@@ -1,24 +1,19 @@
 package com.ojas.gcp.firstappenginetryout.rest;
 
 import com.ojas.gcp.firstappenginetryout.auth.SessionUser;
-import com.ojas.gcp.firstappenginetryout.entity.*;
 import com.ojas.gcp.firstappenginetryout.entity.enums.UserType;
 import com.ojas.gcp.firstappenginetryout.repository.OrgUserConnectionRepository;
 import com.ojas.gcp.firstappenginetryout.repository.ProgramParticipantRepository;
 import com.ojas.gcp.firstappenginetryout.rest.dto.ProgramDTO;
-import com.ojas.gcp.firstappenginetryout.rest.dto.participants.OrgUserConnectionDTO;
 import com.ojas.gcp.firstappenginetryout.rest.dto.participants.ProgramParticipantsDTO;
 import com.ojas.gcp.firstappenginetryout.service.ProgramService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.xml.bind.ValidationException;
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 public class ProgramsController {
@@ -119,5 +114,83 @@ public class ProgramsController {
         SessionUser user = (SessionUser) authentication.getPrincipal();
         ProgramParticipantsDTO programParticipants = programService.getProgramParticipants(user, programId, userType);
         return ResponseEntity.ok(programParticipants);
+    }
+
+    @GetMapping(value = "students/{studentId}/programs")
+    public ResponseEntity<Object> getConnectedProgramsForStudents(@PathVariable Long studentId,
+                                                                  @AuthenticationPrincipal Authentication authentication) throws Exception {
+        validateUserAccessingSelfResource(authentication, studentId);
+        return ResponseEntity.ok(programService.getConnectedProgramsForUser(studentId));
+    }
+
+    @GetMapping(value = "students/{studentId}/programs/{programId}")
+    public ResponseEntity<Object> getConnectedProgramDetailsForStudent(@PathVariable Long studentId, @PathVariable Long programId,
+                                                                  @AuthenticationPrincipal Authentication authentication) throws Exception {
+        validateUserAccessingSelfResource(authentication, studentId);
+        return ResponseEntity.ok(programService.getConnectedProgramDetailsForUser(studentId, programId, UserType.STUDENT));
+    }
+
+    @GetMapping(value = "students/{studentId}/suggested/programs")
+    public ResponseEntity<Object> getSuggestedProgramsForStudents(@PathVariable Long studentId,
+                                                                  @AuthenticationPrincipal Authentication authentication) throws Exception {
+        validateUserAccessingSelfResource(authentication, studentId);
+        return ResponseEntity.ok(programService.getSuggestedProgramsForUser(studentId));
+    }
+
+    @GetMapping(value = "students/{studentId}/suggested/programs/{programId}")
+    public ResponseEntity<Object> getSuggestedProgramDetailsForStudent(@PathVariable Long studentId, @PathVariable Long programId,
+                                                                       @AuthenticationPrincipal Authentication authentication) throws Exception {
+        validateUserAccessingSelfResource(authentication, studentId);
+        return ResponseEntity.ok(programService.getSuggestedProgramDetailsForUser(studentId, programId, UserType.STUDENT));
+    }
+
+
+    @GetMapping(value = "mentors/{mentorId}/programs")
+    public ResponseEntity<Object> getConnectedProgramsForMentors(@PathVariable Long mentorId,
+                                                                 @AuthenticationPrincipal Authentication authentication) throws Exception {
+        validateUserAccessingSelfResource(authentication, mentorId);
+        return ResponseEntity.ok(programService.getConnectedProgramsForUser(mentorId));
+    }
+
+    @GetMapping(value = "mentors/{mentorId}/programs/{programId}")
+    public ResponseEntity<Object> getConnectedProgramDetailsForMentor(@PathVariable Long mentorId, @PathVariable Long programId,
+                                                                       @AuthenticationPrincipal Authentication authentication) throws Exception {
+        validateUserAccessingSelfResource(authentication, mentorId);
+        return ResponseEntity.ok(programService.getConnectedProgramDetailsForUser(mentorId, programId, UserType.MENTOR));
+    }
+
+    @GetMapping(value = "mentors/{mentorId}/suggested/programs")
+    public ResponseEntity<Object> getSuggestedProgramsForMentors(@PathVariable Long mentorId,
+                                                                  @AuthenticationPrincipal Authentication authentication) throws Exception {
+        validateUserAccessingSelfResource(authentication, mentorId);
+        return ResponseEntity.ok(programService.getSuggestedProgramsForUser(mentorId));
+    }
+
+    @GetMapping(value = "mentors/{mentorId}/suggested/programs/{programId}")
+    public ResponseEntity<Object> getSuggestedProgramDetailsForMentor(@PathVariable Long mentorId, @PathVariable Long programId,
+                                                                       @AuthenticationPrincipal Authentication authentication) throws Exception {
+        validateUserAccessingSelfResource(authentication, mentorId);
+        return ResponseEntity.ok(programService.getSuggestedProgramDetailsForUser(mentorId, programId, UserType.MENTOR));
+    }
+
+    @GetMapping(value = "students/{studentId}/programs/{programId}/participants")
+    public ResponseEntity<Object> getProgramParticipantsForStudents(@PathVariable Long studentId, @PathVariable Long programId,
+                                                                      @AuthenticationPrincipal Authentication authentication) throws Exception {
+        validateUserAccessingSelfResource(authentication, studentId);
+        return ResponseEntity.ok(programService.getProgramParticipantsForStudents(studentId, programId, UserType.STUDENT));
+    }
+
+    @GetMapping(value = "mentors/{mentorId}/programs/{programId}/participants")
+    public ResponseEntity<Object> getProgramParticipantsForMentors(@PathVariable Long mentorId, @PathVariable Long programId,
+                                                                    @AuthenticationPrincipal Authentication authentication) throws Exception {
+        validateUserAccessingSelfResource(authentication, mentorId);
+        return ResponseEntity.ok(programService.getProgramParticipantsForMentors(mentorId, programId, UserType.MENTOR));
+    }
+
+    private void validateUserAccessingSelfResource(Authentication authentication, Long userId) throws ValidationException {
+        SessionUser user = (SessionUser) authentication.getPrincipal();
+        if (!user.getId().equals(userId)) {
+            throw new ValidationException("Logged-In user cannot access the resource");
+        }
     }
 }

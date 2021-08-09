@@ -291,6 +291,19 @@
             <column name="answer_2" type="TEXT"/>
             <column name="question_3" type="varchar(500)"/>
             <column name="answer_3" type="TEXT"/>
-        </createTable>    </changeSet>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="11" author="ojas.v.agashe@gmail.com">
+        <comment>Adding userType in app_invite table</comment>
+        <addColumn tableName="app_invitations">
+            <column name="user_type" type = "varchar(25)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="account_created" type = "BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
 
 </databaseChangeLog>

@@ -11,6 +11,8 @@ import java.util.Optional;
 public interface ProgramApplicationRepository extends JpaRepository<ProgramApplication, Long> {
     List<ProgramApplication> findByProgramIdAndUserType(Long programId, UserType applicantType);
 
+    List<ProgramApplication> findByApplicantId(Long userId);
+
     Optional<ProgramApplication> findByProgramIdAndApplicantId(Long programId, Long userId);
 
     List<ProgramApplication> findByApplicantIdOrderByAppliedOnDesc(Long applicantId);

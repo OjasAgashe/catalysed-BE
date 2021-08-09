@@ -5,6 +5,7 @@ import com.ojas.gcp.firstappenginetryout.entity.AppUser;
 import com.ojas.gcp.firstappenginetryout.entity.Program;
 import com.ojas.gcp.firstappenginetryout.entity.ProgramApplication;
 import com.ojas.gcp.firstappenginetryout.entity.ProgramParticipant;
+import com.ojas.gcp.firstappenginetryout.entity.ProgramUserPK;
 import com.ojas.gcp.firstappenginetryout.entity.enums.ProgramApplicationStatus;
 import com.ojas.gcp.firstappenginetryout.entity.enums.UserType;
 import com.ojas.gcp.firstappenginetryout.repository.AppUserRepository;
@@ -21,7 +22,6 @@ import com.ojas.gcp.firstappenginetryout.service.helper.AuthValidationHelper;
 import com.ojas.gcp.firstappenginetryout.service.helper.ProgramsHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-
 import javax.xml.bind.ValidationException;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -127,6 +127,7 @@ public class ProgramApplicationServiceImpl implements ProgramApplicationService 
         AppUser student = appUserRepository.findById(studentId).get();
         ProgramApplication application = buildProgramApplication(applicationDTO, student, program);
         applicationRepository.saveAndFlush(application);
+        applicationDTO.setId(application.getId());
         return applicationDTO;
     }
 
@@ -182,6 +183,9 @@ public class ProgramApplicationServiceImpl implements ProgramApplicationService 
         participant.setProgram(application.getProgram());
         participant.setUser(application.getApplicant());
         participant.setUserType(application.getUserType());
+        ProgramUserPK pk = new ProgramUserPK(participant.getProgram().getId(), participant.getUser().getId(), participant.getOrganization().getId());
+
+        participant.setId(pk);
         return participant;
     }
 

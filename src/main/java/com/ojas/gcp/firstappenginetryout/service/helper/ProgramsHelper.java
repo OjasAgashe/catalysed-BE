@@ -12,13 +12,17 @@ import com.ojas.gcp.firstappenginetryout.entity.enums.InvitationStatus;
 import com.ojas.gcp.firstappenginetryout.entity.enums.ProgramStatus;
 import com.ojas.gcp.firstappenginetryout.entity.enums.UserType;
 import com.ojas.gcp.firstappenginetryout.repository.ProfileUserRepository;
+import com.ojas.gcp.firstappenginetryout.repository.projection.ParticipantProgramMeta;
+import com.ojas.gcp.firstappenginetryout.repository.projection.ProgramMeta;
 import com.ojas.gcp.firstappenginetryout.rest.dto.LocationDTO;
 import com.ojas.gcp.firstappenginetryout.rest.dto.PhoneDTO;
 import com.ojas.gcp.firstappenginetryout.rest.dto.ProgramDTO;
-import com.ojas.gcp.firstappenginetryout.rest.dto.ProgramInvitationDTO;
+import com.ojas.gcp.firstappenginetryout.rest.dto.invitations.ProgramInvitationDTO;
 import com.ojas.gcp.firstappenginetryout.rest.dto.ProgramOrgMetaDTO;
+import com.ojas.gcp.firstappenginetryout.rest.dto.invitations.UserViewProgramInviteMetaDTO;
 import com.ojas.gcp.firstappenginetryout.rest.dto.participants.ProgramParticipantBaseDTO;
 import com.ojas.gcp.firstappenginetryout.rest.dto.participants.ProgramParticipantsDTO;
+import com.ojas.gcp.firstappenginetryout.rest.dto.participants.StudentViewProgramParticipantsDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import javax.xml.bind.ValidationException;
@@ -181,6 +185,30 @@ public class ProgramsHelper {
         );
     }
 
+    public ProgramOrgMetaDTO buildProgramOrgMetaDTO(ProgramMeta program) {
+        return new ProgramOrgMetaDTO(
+                program.getId(),
+                program.getTitle(),
+                program.getTentativeStartDate(),
+                program.getDurationInMonths(),
+                program.getMode(),
+                program.getLanguageRequirements(),
+                program.getStatus()
+        );
+    }
+
+    public ProgramOrgMetaDTO buildProgramOrgMetaDTO(ParticipantProgramMeta programMeta) {
+        return new ProgramOrgMetaDTO(
+                programMeta.getId(),
+                programMeta.getTitle(),
+                programMeta.getTentativeStartDate(),
+                programMeta.getDurationInMonths(),
+                programMeta.getMode(),
+                programMeta.getLanguageRequirements(),
+                programMeta.getStatus()
+        );
+    }
+
     public ProgramInvitation buildProgramInvitation(Program program, AppUser appUser, ProgramInvitationDTO invitationDTO) {
         ProgramInvitation programInvitation = new ProgramInvitation();
         programInvitation.setProgram(program);
@@ -248,4 +276,39 @@ public class ProgramsHelper {
         programParticipantsDTO.setMentorParticipants(mentorParticipantList);
         return programParticipantsDTO;
     }
+
+    public StudentViewProgramParticipantsDTO buildUserViewProgramParticipantsDTO(Long programId, List<ProgramParticipant> programParticipants) {
+        List<ProgramParticipantBaseDTO> mentorParticipantList = new ArrayList<>();
+        List<String> studentParticipantList = new ArrayList<>();
+        programParticipants.forEach(programParticipant ->  {
+            AppUser user = programParticipant.getUser();
+            if (user.getType() == UserType.STUDENT) {
+                studentParticipantList.add(user.getFirstName() + " " + user.getLastName());
+            } else {
+                ProfileUserEO profile = profileUserRepository.findById(user.getId()).get();
+                ProgramParticipantBaseDTO participantBaseDTO = new ProgramParticipantBaseDTO(profile.getId(), user.getFirstName(), user.getLastName(),
+                        user.getEmail(), new PhoneDTO(profile.getContactPhoneCountryName(), profile.getContactPhoneCountryCode(), profile.getContactPhoneNumber()),
+                        new LocationDTO(profile.getLocationCountry(), profile.getLocationRegion()));
+                mentorParticipantList.add(participantBaseDTO);
+            }
+        });
+
+        StudentViewProgramParticipantsDTO programParticipantsDTO = new StudentViewProgramParticipantsDTO();
+        programParticipantsDTO.setProgramId(programId);
+        programParticipantsDTO.setStudents(studentParticipantList);
+        programParticipantsDTO.setMentors(mentorParticipantList);
+        return programParticipantsDTO;
+    }
+
+    public UserViewProgramInviteMetaDTO buildUserViewFOrProgramInvite(ProgramInvitation programInvitation) {
+        Program program = programInvitation.getProgram();
+        return new UserViewProgramInviteMetaDTO(
+                program.getTitle(),
+                program.getOrganization().getName(),
+                programInvitation.getSentAt(),
+                program.getTentativeStartDate(),
+                programInvitation.getResponseStatus()
+        );
+    }
+
 }

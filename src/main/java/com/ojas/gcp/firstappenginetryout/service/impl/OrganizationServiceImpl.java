@@ -1,28 +1,45 @@
 package com.ojas.gcp.firstappenginetryout.service.impl;
 
 import com.ojas.gcp.firstappenginetryout.auth.SessionUser;
-import com.ojas.gcp.firstappenginetryout.entity.Organization;
-import com.ojas.gcp.firstappenginetryout.entity.OrganizationUser;
+import com.ojas.gcp.firstappenginetryout.entity.*;
 import com.ojas.gcp.firstappenginetryout.entity.enums.OrgSubscriptionType;
+import com.ojas.gcp.firstappenginetryout.repository.OrgUserConnectionRepository;
 import com.ojas.gcp.firstappenginetryout.repository.OrganizationRepository;
 import com.ojas.gcp.firstappenginetryout.repository.OrganizationUserRepository;
+import com.ojas.gcp.firstappenginetryout.rest.dto.OrgMetaDTO;
 import com.ojas.gcp.firstappenginetryout.rest.dto.OrganizationDetailsDTO;
+import com.ojas.gcp.firstappenginetryout.rest.dto.connected.ConnectedOrgDetailsForUser;
+import com.ojas.gcp.firstappenginetryout.rest.dto.profile.OrgDetailsProfileDTO;
 import com.ojas.gcp.firstappenginetryout.service.OrganizationService;
+import com.ojas.gcp.firstappenginetryout.service.ProfileService;
+import com.ojas.gcp.firstappenginetryout.service.ProgramService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import javax.xml.bind.ValidationException;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class OrganizationServiceImpl implements OrganizationService {
     private final OrganizationRepository organizationRepository;
     private final OrganizationUserRepository orgUserRepository;
+    private final OrgUserConnectionRepository orgUserConnectionRepository;
+    private final ProfileService profileService;
+    private final ProgramService programService;
 
     @Autowired
-    public OrganizationServiceImpl(OrganizationRepository organizationRepository, OrganizationUserRepository orgUserRepository) {
+    public OrganizationServiceImpl(OrganizationRepository organizationRepository, OrganizationUserRepository orgUserRepository,
+                                   OrgUserConnectionRepository orgUserConnectionRepository, ProfileService profileService,
+                                   ProgramService programService) {
         this.organizationRepository = organizationRepository;
         this.orgUserRepository = orgUserRepository;
+        this.orgUserConnectionRepository = orgUserConnectionRepository;
+        this.profileService = profileService;
+        this.programService = programService;
     }
 
     @Override
@@ -45,6 +62,32 @@ public class OrganizationServiceImpl implements OrganizationService {
             organizationRepository.saveAndFlush(organization);
         }
         return mapEntityToDTO(organization);
+    }
+
+    @Override
+    public OrgMetaDTO getOrgMetaForOrgUser(SessionUser user) throws ValidationException {
+        Organization organization = orgUserRepository.findById(user.getId()).get().getOrganization();
+        return buildOrgMetaDTO(organization);
+    }
+
+    @Override
+    public List<OrgMetaDTO> getConnectedOrgs(Long userId) throws ValidationException {
+        List<OrgUserConnection> orgUserConnection = orgUserConnectionRepository.findByIdUserId(userId);
+        if(CollectionUtils.isEmpty(orgUserConnection)) {
+            throw new ValidationException("User not yet connected with any Organization");
+        }
+        return orgUserConnection.stream()
+                .map(orgConnection -> buildOrgMetaDTO(orgConnection.getOrganization()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public ConnectedOrgDetailsForUser getConnectedOrgDetails(Long userId, Long orgId) throws ValidationException {
+        Optional<OrgUserConnection> orgUserConnection = orgUserConnectionRepository.findByIdOrgIdAndIdUserId(orgId, userId);
+        if(!orgUserConnection.isPresent()) {
+            throw new ValidationException("User not yet connected with Organization");
+        }
+        return buildConnectedOrgDetailsForUser(orgId);
     }
 
     private Organization mapDTOToEntity(SessionUser user, OrganizationDetailsDTO detailsDTO) {
@@ -77,5 +120,24 @@ public class OrganizationServiceImpl implements OrganizationService {
         Optional<OrganizationUser> orgUser = orgUserRepository.findById(id);
         orgUser.orElseThrow(() -> new UsernameNotFoundException("User not found"));
         return orgUser.get();
+    }
+
+    private ConnectedOrgDetailsForUser buildConnectedOrgDetailsForUser(Long orgId) throws ValidationException {
+        return new ConnectedOrgDetailsForUser(
+                profileService.getOrgDetailsProfileForNonOrgUser(orgId),
+                programService.getProgramsMetaForOrgById(orgId)
+        );
+    }
+
+    private OrgMetaDTO buildOrgMetaDTO(Organization organization) {
+        return new OrgMetaDTO(
+                organization.getId(),
+                organization.getName(),
+                organization.getDescription(),
+                organization.getOrgLogo(),
+                organization.getWebsite(),
+                organization.getSocialMediaCode(),
+                organization.getSocialMediaLink()
+                );
     }
 }

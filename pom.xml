@@ -125,10 +125,11 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 <!--				<version>2.3.4.RELEASE</version>-->
 			</plugin>
-<!--			<plugin>-->
-<!--				<groupId>com.google.cloud.tools</groupId>-->
-<!--				<artifactId>appengine-maven-plugin</artifactId>-->
-<!--			</plugin>-->
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>appengine-maven-plugin</artifactId>
+			</plugin>
+
 <!--			Build front-end code from src folder-->
 			<plugin>
 				<groupId>com.github.eirslett</groupId>
@@ -142,8 +143,8 @@
 						</goals>
 						<phase>generate-resources</phase>
 						<configuration>
-							<nodeVersion>v12.6.0</nodeVersion>
-							<npmVersion>6.9.0</npmVersion>
+							<nodeVersion>v16.0.0</nodeVersion>
+							<npmVersion>7.20.3</npmVersion>
 						</configuration>
 					</execution>
 
