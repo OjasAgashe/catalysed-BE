@@ -1,5 +1,8 @@
 package com.ojas.gcp.firstappenginetryout.rest.dto.profile;
 
+import com.ojas.gcp.firstappenginetryout.rest.dto.LocationDTO;
+import com.ojas.gcp.firstappenginetryout.rest.dto.PhoneDTO;
+
 public class StudentProfileDTO {
     private Long id;
     private String email;
@@ -8,6 +11,9 @@ public class StudentProfileDTO {
     private String birthYear;
     private String organization;
     private String gender;
+    private String primaryLanguage;
+    private LocationDTO location;
+    private PhoneDTO phone;
     private boolean stableConnection;
     private String primaryDevice;
     private boolean previouslyMentored;
@@ -17,7 +23,8 @@ public class StudentProfileDTO {
     }
 
     public StudentProfileDTO(Long id, String email, String firstName, String lastName, String birthYear, String organization,
-                             String gender, boolean stableConnection, String primaryDevice, boolean previouslyMentored) {
+                             String gender, String primaryLanguage, LocationDTO location, PhoneDTO phone,
+                             boolean stableConnection, String primaryDevice, boolean previouslyMentored) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;
@@ -25,6 +32,9 @@ public class StudentProfileDTO {
         this.birthYear = birthYear;
         this.organization = organization;
         this.gender = gender;
+        this.primaryLanguage = primaryLanguage;
+        this.location = location;
+        this.phone = phone;
         this.stableConnection = stableConnection;
         this.primaryDevice = primaryDevice;
         this.previouslyMentored = previouslyMentored;
@@ -84,6 +94,30 @@ public class StudentProfileDTO {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public String getPrimaryLanguage() {
+        return primaryLanguage;
+    }
+
+    public void setPrimaryLanguage(String primaryLanguage) {
+        this.primaryLanguage = primaryLanguage;
+    }
+
+    public LocationDTO getLocation() {
+        return location;
+    }
+
+    public void setLocation(LocationDTO location) {
+        this.location = location;
+    }
+
+    public PhoneDTO getPhone() {
+        return phone;
+    }
+
+    public void setPhone(PhoneDTO phone) {
+        this.phone = phone;
     }
 
     public boolean isStableConnection() {

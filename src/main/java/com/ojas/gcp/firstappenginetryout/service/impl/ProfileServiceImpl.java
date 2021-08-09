@@ -8,6 +8,7 @@ import com.ojas.gcp.firstappenginetryout.entity.enums.UserType;
 import com.ojas.gcp.firstappenginetryout.repository.ProfileOrgRepository;
 import com.ojas.gcp.firstappenginetryout.repository.ProfileUserRepository;
 import com.ojas.gcp.firstappenginetryout.rest.dto.LocationDTO;
+import com.ojas.gcp.firstappenginetryout.rest.dto.OrgMetaDTO;
 import com.ojas.gcp.firstappenginetryout.rest.dto.PhoneDTO;
 import com.ojas.gcp.firstappenginetryout.rest.dto.profile.MentorProfileDTO;
 import com.ojas.gcp.firstappenginetryout.rest.dto.profile.OrgDetailsProfileDTO;
@@ -18,6 +19,7 @@ import com.ojas.gcp.firstappenginetryout.service.helper.AuthValidationHelper;
 import org.springframework.stereotype.Component;
 
 import javax.xml.bind.ValidationException;
+import java.util.List;
 import java.util.Optional;
 
 import static com.ojas.gcp.firstappenginetryout.entity.enums.UserType.ORGANIZATION_USER;
@@ -44,20 +46,15 @@ public class ProfileServiceImpl implements ProfileService {
                 orgUser.getEmail(),
                 orgUser.getFirstName(),
                 orgUser.getLastName(),
-                new OrgDetailsProfileDTO(
-                        new LocationDTO(orgProfile.getLocationCountry(), orgProfile.getLocationRegion()),
-                        orgProfile.getWorkDescription(),
-                        new PhoneDTO(orgProfile.getContactPhoneCountryName(), orgProfile.getContactPhoneCountryCode(), orgProfile.getContactPhoneNumber()),
-                        orgProfile.getOrganization().getDescription(),
-                        orgProfile.getOrganization().getName(),
-                        orgProfile.getPrimaryLanguage(),
-                        orgProfile.getOrganization().getWebsite(),
-                        orgProfile.getOrganization().getSocialMediaCode(),
-                        orgProfile.getOrganization().getSocialMediaLink(),
-                        orgProfile.getYearOfInception()
-                )
+                buildOrgProfileDetailsDTO(orgProfile)
         );
         return  profileDTO;
+    }
+
+    @Override
+    public OrgDetailsProfileDTO getOrgDetailsProfileForNonOrgUser(Long orgId) throws ValidationException {
+        ProfileOrgEO orgProfile = getOrgProfileRecord(orgId);
+        return buildOrgProfileDetailsDTO(orgProfile);
     }
 
     @Override
@@ -146,6 +143,13 @@ public class ProfileServiceImpl implements ProfileService {
         userProfile.setGender(studentProfileDTO.getGender());
         userProfile.setStableConnection(studentProfileDTO.isStableConnection());
         userProfile.setStudentPreviouslyMentored(studentProfileDTO.isPreviouslyMentored());
+        userProfile.setPrimaryDevice(studentProfileDTO.getPrimaryDevice());
+        userProfile.setPrimaryLanguage(studentProfileDTO.getPrimaryLanguage());
+        userProfile.setLocationCountry(studentProfileDTO.getLocation().getCountry());
+        userProfile.setLocationRegion(studentProfileDTO.getLocation().getRegion());
+        userProfile.setContactPhoneCountryCode(studentProfileDTO.getPhone().getCountryCode());
+        userProfile.setContactPhoneCountryName(studentProfileDTO.getPhone().getCountryName());
+        userProfile.setContactPhoneNumber(studentProfileDTO.getPhone().getNumber());
     }
 
     private StudentProfileDTO getStudentProfileDTO(ProfileUserEO userProfile) {
@@ -157,6 +161,9 @@ public class ProfileServiceImpl implements ProfileService {
                 userProfile.getBirthYear(),
                 userProfile.getOrganization(),
                 userProfile.getGender(),
+                userProfile.getPrimaryLanguage(),
+                new LocationDTO(userProfile.getLocationCountry(), userProfile.getLocationRegion()),
+                new PhoneDTO(userProfile.getContactPhoneCountryName(), userProfile.getContactPhoneCountryCode(), userProfile.getContactPhoneNumber()),
                 userProfile.isStableConnection(),
                 userProfile.getPrimaryDevice(),
                 userProfile.isStudentPreviouslyMentored()
@@ -173,6 +180,9 @@ public class ProfileServiceImpl implements ProfileService {
                 userProfile.getBirthYear(),
                 userProfile.getOrganization(),
                 userProfile.getGender(),
+                userProfile.getPrimaryLanguage(),
+                new LocationDTO(userProfile.getLocationCountry(), userProfile.getLocationRegion()),
+                new PhoneDTO(userProfile.getContactPhoneCountryName(), userProfile.getContactPhoneCountryCode(), userProfile.getContactPhoneNumber()),
                 userProfile.getMentorQualification(),
                 userProfile.getMentorProfession(),
                 userProfile.isStableConnection(),
@@ -193,5 +203,27 @@ public class ProfileServiceImpl implements ProfileService {
         userProfile.setStableConnection(mentorProfileDTO.isStableConnection());
         userProfile.setMentorPreviouslyMentored(mentorProfileDTO.isPreviouslyMentored());
         userProfile.setMentorExperience(mentorProfileDTO.getExperience());
+        userProfile.setPrimaryLanguage(mentorProfileDTO.getPrimaryLanguage());
+        userProfile.setLocationCountry(mentorProfileDTO.getLocation().getCountry());
+        userProfile.setLocationRegion(mentorProfileDTO.getLocation().getRegion());
+        userProfile.setContactPhoneCountryCode(mentorProfileDTO.getPhone().getCountryCode());
+        userProfile.setContactPhoneCountryName(mentorProfileDTO.getPhone().getCountryName());
+        userProfile.setContactPhoneNumber(mentorProfileDTO.getPhone().getNumber());
+    }
+
+    private OrgDetailsProfileDTO buildOrgProfileDetailsDTO(ProfileOrgEO orgProfile) {
+        return new OrgDetailsProfileDTO(
+                new LocationDTO(orgProfile.getLocationCountry(), orgProfile.getLocationRegion()),
+                orgProfile.getWorkDescription(),
+                new PhoneDTO(orgProfile.getContactPhoneCountryName(), orgProfile.getContactPhoneCountryCode(), orgProfile.getContactPhoneNumber()),
+                orgProfile.getContactEmail(),
+                orgProfile.getOrganization().getDescription(),
+                orgProfile.getOrganization().getName(),
+                orgProfile.getPrimaryLanguage(),
+                orgProfile.getOrganization().getWebsite(),
+                orgProfile.getOrganization().getSocialMediaCode(),
+                orgProfile.getOrganization().getSocialMediaLink(),
+                orgProfile.getYearOfInception()
+        );
     }
 }

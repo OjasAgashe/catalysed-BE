@@ -18,12 +18,14 @@ import com.ojas.gcp.firstappenginetryout.rest.dto.profile.ProfileBuilderMentorDT
 import com.ojas.gcp.firstappenginetryout.rest.dto.profile.ProfileBuilderOrgDTO;
 import com.ojas.gcp.firstappenginetryout.rest.dto.profile.ProfileBuilderStudentDTO;
 import com.ojas.gcp.firstappenginetryout.service.ProfileBuilderService;
+import com.ojas.gcp.firstappenginetryout.service.ProgramService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProfileBuilderServiceImpl implements ProfileBuilderService {
 
+    private ProgramService programService;
     private OrganizationUserRepository orgUserRepository;
     private ProfileOrgRepository profileOrgRepository;
     private ProfileUserRepository profileUserRepository;
@@ -31,11 +33,13 @@ public class ProfileBuilderServiceImpl implements ProfileBuilderService {
 
     @Autowired
     public ProfileBuilderServiceImpl(OrganizationUserRepository orgUserRepository, ProfileOrgRepository profileOrgRepository,
-                                     ProfileUserRepository profileUserRepository, AppUserRepository appUserRepository) {
+                                     ProfileUserRepository profileUserRepository, AppUserRepository appUserRepository,
+                                     ProgramService programService) {
         this.orgUserRepository = orgUserRepository;
         this.profileOrgRepository = profileOrgRepository;
         this.profileUserRepository = profileUserRepository;
         this.appUserRepository = appUserRepository;
+        this.programService = programService;
     }
 
     @Override
@@ -52,6 +56,8 @@ public class ProfileBuilderServiceImpl implements ProfileBuilderService {
         setProfileEO(appUser, mentorProfileDTO);
         appUser.setProfileCreated(true);
         appUserRepository.saveAndFlush(appUser);
+        //if invitations present then accept the invitation and set user as invitation participant
+        programService.updateApplicationProgramInviteAndAddProgramParticipant(user.getEmailId(), appUser);
     }
 
     @Override
@@ -60,6 +66,7 @@ public class ProfileBuilderServiceImpl implements ProfileBuilderService {
         setProfileEO(appUser, studentProfileDTO);
         appUser.setProfileCreated(true);
         appUserRepository.saveAndFlush(appUser);
+        programService.updateApplicationProgramInviteAndAddProgramParticipant(user.getEmailId(), appUser);
     }
 
     @Override

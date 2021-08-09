@@ -82,8 +82,8 @@ public class ProfileController {
     public ResponseEntity<Object> updateMentorProfile(@AuthenticationPrincipal Authentication authentication,
                                                        @PathVariable Long mentorId, @RequestBody MentorProfileDTO profileDTO) throws ValidationException {
         SessionUser user = (SessionUser)authentication.getPrincipal();
-        if (user.getUserType() != UserType.STUDENT) {
-            throw new ValidationException("User is not a Student");
+        if (user.getUserType() != UserType.MENTOR) {
+            throw new ValidationException("User is not a Mentor");
         }
         service.updateMentorProfile(user, profileDTO, mentorId);
         return ResponseEntity.ok("Profile updated successfully");

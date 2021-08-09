@@ -8,6 +8,7 @@ public class AuthenticationUserDTO {
     private String userName;
 //    private String subscriptionType;
 //    private String roles;
+    private String orgName;
     private boolean isActive;
     private UserType userType;
     private boolean accountVerified;
@@ -16,11 +17,12 @@ public class AuthenticationUserDTO {
     public AuthenticationUserDTO() {
     }
 
-    public AuthenticationUserDTO(Long id, String email, String userName, boolean isActive,
+    public AuthenticationUserDTO(Long id, String email, String userName, String orgName, boolean isActive,
                                  UserType userType, boolean accountVerified, boolean profileCreated) {
         this.id = id;
         this.email = email;
         this.userName = userName;
+        this.orgName = orgName;
         this.isActive = isActive;
         this.userType = userType;
         this.accountVerified = accountVerified;
@@ -49,6 +51,14 @@ public class AuthenticationUserDTO {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getOrgName() {
+        return orgName;
+    }
+
+    public void setOrgName(String orgName) {
+        this.orgName = orgName;
     }
 
     public boolean isActive() {

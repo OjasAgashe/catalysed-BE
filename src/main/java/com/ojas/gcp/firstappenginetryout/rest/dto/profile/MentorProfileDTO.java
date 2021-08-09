@@ -1,5 +1,8 @@
 package com.ojas.gcp.firstappenginetryout.rest.dto.profile;
 
+import com.ojas.gcp.firstappenginetryout.rest.dto.LocationDTO;
+import com.ojas.gcp.firstappenginetryout.rest.dto.PhoneDTO;
+
 public class MentorProfileDTO {
     private Long id;
     private String email;
@@ -8,6 +11,9 @@ public class MentorProfileDTO {
     private String birthYear;
     private String organization;
     private String gender;
+    private String primaryLanguage;
+    private LocationDTO location;
+    private PhoneDTO phone;
     private String qualification;
     private String profession;
     private boolean stableConnection;
@@ -18,8 +24,8 @@ public class MentorProfileDTO {
     }
 
     public MentorProfileDTO(Long id, String email, String firstName, String lastName, String birthYear, String organization,
-                            String gender, String qualification, String profession, boolean stableConnection,
-                            boolean previouslyMentored, int experience) {
+                            String gender, String primaryLanguage, LocationDTO location, PhoneDTO phone, String qualification,
+                            String profession, boolean stableConnection, boolean previouslyMentored, int experience) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;
@@ -27,6 +33,9 @@ public class MentorProfileDTO {
         this.birthYear = birthYear;
         this.organization = organization;
         this.gender = gender;
+        this.primaryLanguage = primaryLanguage;
+        this.location = location;
+        this.phone = phone;
         this.qualification = qualification;
         this.profession = profession;
         this.stableConnection = stableConnection;
@@ -88,6 +97,30 @@ public class MentorProfileDTO {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public String getPrimaryLanguage() {
+        return primaryLanguage;
+    }
+
+    public void setPrimaryLanguage(String primaryLanguage) {
+        this.primaryLanguage = primaryLanguage;
+    }
+
+    public LocationDTO getLocation() {
+        return location;
+    }
+
+    public void setLocation(LocationDTO location) {
+        this.location = location;
+    }
+
+    public PhoneDTO getPhone() {
+        return phone;
+    }
+
+    public void setPhone(PhoneDTO phone) {
+        this.phone = phone;
     }
 
     public String getQualification() {

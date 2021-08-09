@@ -7,6 +7,7 @@ public class OrgDetailsProfileDTO {
     private LocationDTO address;
     private String workDescription;
     private PhoneDTO phone;
+    private String contactEmail;
     private String description;
     private String name;
     private String primaryLanguage;
@@ -18,12 +19,13 @@ public class OrgDetailsProfileDTO {
     public OrgDetailsProfileDTO() {
     }
 
-    public OrgDetailsProfileDTO(LocationDTO address, String workDescription, PhoneDTO phone, String description,
-                                String name, String primaryLanguage, String website, String socialMediaCode,
-                                String socialMediaLink, String yearOfInception) {
+    public OrgDetailsProfileDTO(LocationDTO address, String workDescription, PhoneDTO phone, String contactEmail,
+                                String description, String name, String primaryLanguage, String website,
+                                String socialMediaCode, String socialMediaLink, String yearOfInception) {
         this.address = address;
         this.workDescription = workDescription;
         this.phone = phone;
+        this.contactEmail = contactEmail;
         this.description = description;
         this.name = name;
         this.primaryLanguage = primaryLanguage;
@@ -55,6 +57,14 @@ public class OrgDetailsProfileDTO {
 
     public void setPhone(PhoneDTO phone) {
         this.phone = phone;
+    }
+
+    public String getContactEmail() {
+        return contactEmail;
+    }
+
+    public void setContactEmail(String contactEmail) {
+        this.contactEmail = contactEmail;
     }
 
     public String getDescription() {
