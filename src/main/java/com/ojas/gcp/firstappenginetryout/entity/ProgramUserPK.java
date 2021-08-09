@@ -14,4 +14,38 @@ public class ProgramUserPK implements Serializable {
 
     @Column(name = "org_id")
     private Long orgId;
+
+    public ProgramUserPK() {
+
+    }
+
+    public ProgramUserPK(Long programId, Long userId, Long orgId) {
+        this.programId = programId;
+        this.userId = userId;
+        this.orgId = orgId;
+    }
+
+    public Long getProgramId() {
+        return programId;
+    }
+
+    public void setProgramId(Long programId) {
+        this.programId = programId;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Long getOrgId() {
+        return orgId;
+    }
+
+    public void setOrgId(Long orgId) {
+        this.orgId = orgId;
+    }
 }

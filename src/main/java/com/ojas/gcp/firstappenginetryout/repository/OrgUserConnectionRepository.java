@@ -11,6 +11,8 @@ import java.util.Optional;
 public interface OrgUserConnectionRepository extends JpaRepository<OrgUserConnection, OrgUserPK> {
     List<OrgUserConnection> findByIdOrgId(Long orgId);
 
+    List<OrgUserConnection> findByIdUserId(Long userId);
+
     Optional<OrgUserConnection> findByIdOrgIdAndIdUserId(Long orgId, Long userId);
 
     List<OrgUserConnection> findByIdOrgIdAndUserType(Long orgId, UserType type);

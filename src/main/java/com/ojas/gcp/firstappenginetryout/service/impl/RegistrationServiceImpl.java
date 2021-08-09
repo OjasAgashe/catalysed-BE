@@ -1,18 +1,11 @@
 package com.ojas.gcp.firstappenginetryout.service.impl;
 
-import com.ojas.gcp.firstappenginetryout.entity.AppUser;
-import com.ojas.gcp.firstappenginetryout.entity.Mentor;
-import com.ojas.gcp.firstappenginetryout.entity.Organization;
-import com.ojas.gcp.firstappenginetryout.entity.OrganizationUser;
-import com.ojas.gcp.firstappenginetryout.entity.Student;
-import com.ojas.gcp.firstappenginetryout.entity.User;
+import com.ojas.gcp.firstappenginetryout.entity.*;
+import com.ojas.gcp.firstappenginetryout.entity.enums.InvitationStatus;
+import com.ojas.gcp.firstappenginetryout.entity.enums.InvitationType;
 import com.ojas.gcp.firstappenginetryout.entity.enums.UserType;
 import com.ojas.gcp.firstappenginetryout.exception.DuplicateResourceException;
-import com.ojas.gcp.firstappenginetryout.repository.AppUserRepository;
-import com.ojas.gcp.firstappenginetryout.repository.MentorRepository;
-import com.ojas.gcp.firstappenginetryout.repository.OrganizationUserRepository;
-import com.ojas.gcp.firstappenginetryout.repository.StudentRepository;
-import com.ojas.gcp.firstappenginetryout.repository.UserRepository;
+import com.ojas.gcp.firstappenginetryout.repository.*;
 import com.ojas.gcp.firstappenginetryout.rest.dto.registration.RegistrationMentorDTO;
 import com.ojas.gcp.firstappenginetryout.rest.dto.registration.RegistrationOrgDetailsDTO;
 import com.ojas.gcp.firstappenginetryout.rest.dto.registration.RegistrationOrgUserDTO;
@@ -33,18 +26,20 @@ public class RegistrationServiceImpl implements RegistrationService {
     private OrganizationUserRepository orgUserRepository;
     private StudentRepository studentRepository;
     private MentorRepository mentorRepository;
+    private AppInvitationsRepository appInvitationsRepository;
     private AppUserRepository appUserRepository;
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
     private EmailServiceImpl emailService;
 
     public RegistrationServiceImpl(OrganizationUserRepository orgUserRepository, StudentRepository studentRepository,
-                                   MentorRepository mentorRepository, UserRepository userRepository,
-                                   PasswordEncoder passwordEncoder, AppUserRepository appUserRepository,
+                                   MentorRepository mentorRepository, AppInvitationsRepository appInvitationsRepository,
+                                   UserRepository userRepository, PasswordEncoder passwordEncoder, AppUserRepository appUserRepository,
                                    EmailServiceImpl emailService) {
         this.orgUserRepository = orgUserRepository;
         this.studentRepository = studentRepository;
         this.mentorRepository = mentorRepository;
+        this.appInvitationsRepository = appInvitationsRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.appUserRepository = appUserRepository;
@@ -99,6 +94,8 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new DuplicateResourceException("User already registered in system - Please Login");
         }
         studentRepository.saveAndFlush(getUser(studentDTO));
+        //check if the user has an app invite, if yes then set it as accountCreated
+        updateAppInvitationRecordIfPresent(studentDTO.getEmail());
 //        emailService.sendMemeMessage("ojasagashea74@gmail.com", "Welcome mail");
     }
 
@@ -108,6 +105,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new DuplicateResourceException("User already registered in system - Please Login");
         }
         mentorRepository.saveAndFlush(getUser(mentorDTO));
+        updateAppInvitationRecordIfPresent(mentorDTO.getEmail());
 //        emailService.sendMemeMessage("ojasagashea74@gmail.com", "Welcome mail");
     }
 
@@ -142,6 +140,17 @@ public class RegistrationServiceImpl implements RegistrationService {
         userRepository.saveAndFlush(passwordChangeUser);
     }
 
+    private void updateAppInvitationRecordIfPresent(String email) {
+        Optional<AppInvitation> appInvitationRecord = appInvitationsRepository.findByEmail(email);
+        if (appInvitationRecord.isPresent() && !appInvitationRecord.get().isAccountCreated()) {
+            AppInvitation appInvitation = appInvitationRecord.get();
+            appInvitation.setAccountCreated(true);
+            if (appInvitation.getType() == InvitationType.ACCOUNT) {
+                appInvitation.setStatus(InvitationStatus.ACCEPTED);
+            }
+            appInvitationsRepository.saveAndFlush(appInvitation);
+        }
+    }
 
     private OrganizationUser getUser(RegistrationOrgUserDTO userDTO) {
         OrganizationUser user = new OrganizationUser();
