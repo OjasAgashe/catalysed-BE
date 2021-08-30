@@ -12,4 +12,7 @@ public interface ParticipantProgramLite {
 
     @Value("#{target.program.title}")
     String getTitle();
+
+    @Value("#{target.program.mode}")
+    String getMode();
 }

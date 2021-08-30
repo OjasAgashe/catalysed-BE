@@ -199,8 +199,9 @@ public class ProgramServiceImpl implements ProgramService {
         }
 
         AppUser appUser = null;
-        if (invitationDTO.getUserId() != null) {
-            appUser = appUserRepository.findById(invitationDTO.getUserId()).get();
+        Optional<AppUser> appUserRecord = appUserRepository.findByEmail(invitationDTO.getEmailId());
+        if (appUserRecord.isPresent()) {
+            appUser = appUserRecord.get();
         }
         ProgramInvitation programInvitation = helper.buildProgramInvitation(program, appUser, invitationDTO);
         programInvitationDetailsRepository.saveAndFlush(programInvitation.getInvitationDetails());

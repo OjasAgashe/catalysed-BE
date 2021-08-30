@@ -45,7 +45,7 @@ public class DirectoryServiceImpl implements DirectoryService {
     public OrgStudentDirectoryDTO getConnectedStudent(Long orgId, Long studentId) throws ValidationException {
         List<ParticipantProgramLite> programLiteList = programParticipantRepository.findByIdUserIdAndIdOrgIdOrderByProgramDesc(studentId, orgId);
         List<OrgUserConnectedProgramDTO> connectPrograms = programLiteList.stream()
-                .map(m -> new OrgUserConnectedProgramDTO(m.getId(), m.getStatus(), m.getTitle()))
+                .map(m -> new OrgUserConnectedProgramDTO(m.getId(), m.getStatus(), m.getTitle(), m.getMode()))
                 .collect(Collectors.toList());
         Optional<ProfileUserEO> studentProfileOptional = profileRepository.findById(studentId);
         if (!studentProfileOptional.isPresent()) {
@@ -80,7 +80,7 @@ public class DirectoryServiceImpl implements DirectoryService {
     public OrgMentorDirectoryDTO getConnectedMentor(Long orgId, Long mentorId) throws ValidationException {
         List<ParticipantProgramLite> programLiteList = programParticipantRepository.findByIdUserIdAndIdOrgIdOrderByProgramDesc(mentorId, orgId);
         List<OrgUserConnectedProgramDTO> connectPrograms = programLiteList.stream()
-                .map(m -> new OrgUserConnectedProgramDTO(m.getId(), m.getStatus(), m.getTitle()))
+                .map(m -> new OrgUserConnectedProgramDTO(m.getId(), m.getStatus(), m.getTitle(), m.getMode()))
                 .collect(Collectors.toList());
         Optional<ProfileUserEO> mentorProfileOptional = profileRepository.findById(mentorId);
         if (!mentorProfileOptional.isPresent()) {

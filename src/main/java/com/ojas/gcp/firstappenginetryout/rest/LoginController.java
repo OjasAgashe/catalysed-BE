@@ -57,22 +57,24 @@ public class LoginController {
                 sessionUser.getEmailId(),
                 sessionUser.getUsername(),
                 null,
+                null,
                 sessionUser.isEnabled(),
                 sessionUser.getUserType(),
                 sessionUser.isAccountVerified(),
                 sessionUser.isProfileCreated()
         );
-        if (!authUser.isProfileCreated()) {
-            if (authUser.getUserType() == UserType.ORGANIZATION_USER) {
-                OrgMetaDTO org = organizationService.getOrgMetaForOrgUser(sessionUser);
-                authUser.setOrgName(org.getName());
-            } else {
-                List<OrgMetaDTO> orgs = organizationService.getConnectedOrgs(sessionUser.getId());
-                if (CollectionUtils.isEmpty(orgs)) {
-                    throw new ValidationException("User not connected to any organization");
-                }
-                authUser.setOrgName(orgs.get(0).getName());
+
+        if (authUser.getUserType() == UserType.ORGANIZATION_USER) {
+            OrgMetaDTO org = organizationService.getOrgMetaForOrgUser(sessionUser);
+            authUser.setOrgId(org.getId());
+            authUser.setOrgName(org.getName());
+        } else if (!authUser.isProfileCreated()){    //non-org users need org details only for first time profile builder
+            List<OrgMetaDTO> orgs = organizationService.getConnectedOrgs(sessionUser.getId());
+            if (CollectionUtils.isEmpty(orgs)) {
+                throw new ValidationException("User not connected to any organization");
             }
+            authUser.setOrgName(orgs.get(0).getName());
+            authUser.setOrgId(orgs.get(0).getId());
         }
         return authUser;
     }
